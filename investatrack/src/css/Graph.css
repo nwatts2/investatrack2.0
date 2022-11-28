@@ -1,0 +1,8 @@
+.graphSection {
+    border:3px solid white;
+    border-radius:5px;
+    width:70%;
+    height:300px;
+    margin:10px 0px;
+    padding:10px;
+}

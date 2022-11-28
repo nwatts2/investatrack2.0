@@ -1,0 +1,29 @@
+.typeMenu {
+    width:30%;
+    margin:10px 0px;
+    display:flex;
+    flex-flow:row nowrap;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.typeMenu input[type='radio'] {
+    display:none;
+}
+
+.typeMenu label {
+    margin:0px 10px;
+    font-size:1.5rem;
+    opacity: 1;
+    transition: all .2s;
+}
+
+.typeMenu label:hover {
+    opacity: .7;
+    transition: all .2s;
+}
+
+.typeMenu input[type='radio']:checked+label {
+    font-weight:bold;
+    text-decoration:underline;
+}

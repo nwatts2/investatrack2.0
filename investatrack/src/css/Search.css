@@ -1,0 +1,16 @@
+.searchBox {
+    width:100%;
+}
+
+.searchBox input {
+    border:3px solid white;
+    border-radius:20px;
+    padding: 5px 10px;
+    margin:10px 0px;
+    background-color:#2e4766;
+    color:white;
+    width:30%;
+    box-shadow: 4px 4px 5px #242425;
+    font-family:'Trebuchet MS';
+    font-size:1rem;
+}

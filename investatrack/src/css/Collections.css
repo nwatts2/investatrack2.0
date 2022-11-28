@@ -1,0 +1,18 @@
+.collections {
+    border: 3px solid white;
+    border-radius:5px;
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:flex-start;
+    align-items:center;
+    width:25%;
+    height:900px;
+    padding:15px 5px;
+}
+
+.collections hr {
+    width:50%;
+    border:2px solid white;
+    border-radius:20px;
+    margin:10px 0px;
+}
