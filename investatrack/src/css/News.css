@@ -1,8 +1,39 @@
 .newsMain {
-    border:3px solid white;
-    border-radius:5px;
     width:75%;
-    height:200px;
     margin:10px 0px;
     padding:10px;
+    display:flex;
+    flex-flow: row nowrap;
+    justify-content:flex-start;
+    align-items:center;
+    overflow-y:hidden;
+    overflow-x:auto;
+}
+
+.articleBox {
+    border-radius:10px;
+    background-color:#2e4766;
+    width:350px;
+    height:300px;
+    padding:10px;
+    margin:10px;
+    display:flex;
+    flex-flow:column nowrap;
+    align-items:center;
+    justify-content:space-around;
+}
+
+.articleBox img {
+    max-height:150px;
+    width:auto;
+}
+
+.articleBox h3 {
+    font-family: 'Lato';
+    font-size:1.2rem;
+    font-weight:light;
+}
+
+.articleBox span {
+    font-size:1rem;
 }
