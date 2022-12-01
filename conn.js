@@ -5,7 +5,7 @@ module.exports = {
     connectDB: function () {
         MongoClient.connect(process.env.DATABASE_URL)
             .then(function (result) {
-                db = result.db('candidates');
+                db = result.db('investa');
                 console.log('Connected to Database');
             })
             .catch(function (error) {

@@ -1,39 +1,102 @@
 .newsMain {
-    width:75%;
+    width:95%;
     margin:10px 0px;
-    padding:10px;
+    padding:0px;
     display:flex;
     flex-flow: row nowrap;
     justify-content:flex-start;
     align-items:center;
     overflow-y:hidden;
     overflow-x:auto;
+    /*background-color:#2e4766;
+    border-radius:10px;
+    box-shadow:0px 0px 5px 5px #1b3046;*/
 }
 
 .articleBox {
     border-radius:10px;
-    background-color:#2e4766;
     width:350px;
-    height:300px;
+    height:350px;
     padding:10px;
     margin:10px;
+    background-color:#142132;
     display:flex;
     flex-flow:column nowrap;
     align-items:center;
-    justify-content:space-around;
+    justify-content:space-between;
+    box-shadow:2px 2px 5px #171718;
 }
 
 .articleBox img {
     max-height:150px;
     width:auto;
+    margin:0px 0px 10px 0px;
+    border-radius:10px;
 }
 
-.articleBox h3 {
+.articleBox hr {
+    margin:0px;
+    position:relative;
+    bottom:0px;    
+}
+
+.articleInfo {
+    display:flex;
+    flex-flow:column nowrap;
+    align-items:center;
+    justify-content:flex-start;
+    background-color:#182a3f;
+    width:100%;
+    padding:0px 5px;
+    border-radius:10px;
+    height:155px;
+}
+
+.headlineContainer {
+    width:350px;
+    background-color:#1b3046;
+    border:3px solid white;
+    border-radius:5px;
+    padding:5px;
+    border-bottom:3px solid white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.articleInfo h3 {
     font-family: 'Lato';
     font-size:1.2rem;
     font-weight:light;
+    width:95%;
+    margin:0;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
 
-.articleBox span {
+.articleBox h4 {
+    font-family: 'Lato';
     font-size:1rem;
+    font-weight:italic;
+    margin:0px;
+    background-color:#182a3f;
+    border-radius: 10px;
+    min-width:70%;
+    padding: 0px 0px 5px 0px;
+}
+
+.articleInfo span {
+    font-size:1rem;
+    font-family:'Lato';
+    margin:10px 0px 0px 0px;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }

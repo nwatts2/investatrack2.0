@@ -2,32 +2,48 @@ import { useEffect, useState } from 'react';
 import '../css/News.css';
 
 const ArticleBox = ({article}) => {
-    const regex = new RegExp(article.source.name, 'i');
-    const array = article.title.replace(regex, ' ').split(' - ');
-    const headline = array[0];
-    const temp = article.description.slice(0, 100).split(' ');
-    let description = '';
+    if (article.source.name && article.description && article.urlToImage && article.title && article.url) {
 
-    let i = 0;
-    while (i < temp.length - 1) {
-        description += temp[i] + ' ';
+        const regex = new RegExp(article.source.name, 'i');
+        const array = article.title.replace(regex, ' ').split(' - ');
+        const headline = array[0];
+        let description = '';
 
-        i++;
+        //const temp = article.description.slice(0, 75).split(' ');
+        const temp = article.description.split(' ');
+
+        let i = 0;
+        while (i < temp.length - 1) {
+            description += temp[i] + ' ';
+
+            i++;
+        }
+
+        description = description.slice(0, description.length - 1);
+        //description += (article.description.length >= 100 ? '..' : '');
+    
+    
+        return (
+            <a href={article.url} target='_blank'>
+                <div className='articleBox'>
+                    <img src={article.urlToImage}/>
+                    <div className='articleInfo'>
+                        <div className='headlineContainer'>
+                            <h3>{headline}</h3>
+                        </div>
+                        <span>{description}</span>
+                    </div>
+                    <hr />
+                    <h4>{article.source.name}</h4>
+
+                </div>
+            </a>
+        );
+
+    } else {
+        return;
     }
-
-    description = description.slice(0, description.length - 1);
-    description += (article.description.length >= 100 ? '..' : '');
-
-    return (
-        <a href={article.url} target='_blank'>
-            <div className='articleBox'>
-                <img src={article.urlToImage}/>
-                <h3>{headline}</h3>
-                <span>{description}</span>
-                <h4>{article.source.name}</h4>
-            </div>
-        </a>
-    );
+    
 };
 
 const News = () => {
