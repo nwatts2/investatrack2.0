@@ -24,7 +24,7 @@ module.exports = {
         if (info) {
             let newValues = {$set: {info: info}};
 
-            db.collection('news').updateOne(newQuery, newValues, {upsert: true}, function (err, res) {
+            db.collection('utilities').updateOne(newQuery, newValues, {upsert: true}, function (err, res) {
                 if (err) throw err;
                 console.log('News Updated');
             });

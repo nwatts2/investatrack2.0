@@ -9,6 +9,7 @@ const cors = require('cors');
 const dbo = require('./conn');
 const path = require('path');
 const pullNews = require('./pullNews');
+const stocks = require('./stocks');
 
 app.use(cors());
 app.use(express.json());
@@ -22,7 +23,9 @@ app.get('*', (req, res) => {
 app.listen(process.env.PORT || 3001, () => {
     dbo.connectDB();
 
-    setTimeout(() => {
+    setTimeout(async () => {
+        //stocks.main();
+
         pullNews.getNews();
 
         setInterval(() => {

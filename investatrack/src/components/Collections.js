@@ -6,7 +6,7 @@ const StockBox = ({ stock }) => {
 
     useEffect(() => {
         async function getStock() {
-            const stockResponse = await fetch(`/record/${stock.stockID}`);
+            const stockResponse = await fetch(`/record/id/${stock.stockID}`);
 
             if (!stockResponse.ok) {
                 const message = `An error occured: ${stockResponse.statusText}`;
@@ -29,17 +29,23 @@ const StockBox = ({ stock }) => {
     }, [stock]);
 
     return (
-        <div className='stockBox'>
+        <div className={currentStock && currentStock.change ? (currentStock.change > 0 ? 'stockBox positiveStock' : 'stockBox negativeStock') : 'stockBox'}>
             <div className='stockBoxColumn1'>
                 <h3>{currentStock ? currentStock.name : ''}</h3>
-                <span>Placeholder Inc.</span>
+                <span>{currentStock && currentStock.longName ? currentStock.longName : ''}</span>
             </div>
             <div className='stockBoxColumn2'>
                 <span>Graph</span>
             </div>
             <div className='stockBoxColumn3'>
-                <h4>Net Change</h4>
-                <h3>{currentStock.price ? currentStock.price.toLocaleString('en-US', {
+                <h4>{currentStock && currentStock.change ? (currentStock.change > 0 ? "+" + currentStock.change.toLocaleString('en-US', {
+                        style: 'currency',
+                        currency:'USD'
+                    }) : currentStock.change.toLocaleString('en-US', {
+                        style: 'currency',
+                        currency:'USD'
+                    })) : ''}</h4>
+                <h3>{currentStock && currentStock.price ? currentStock.price.toLocaleString('en-US', {
                         style: 'currency',
                         currency:'USD'
                     }) : 'Unknown'}</h3>
@@ -67,3 +73,11 @@ const Collections = ({ currentUser }) => {
 }
 
 export default Collections;
+
+/*
+63890ae0f55e7d65a1cb0f9d
+63890eb5f55e7d65a1d5485d
+638911fcf55e7d65a1ddf64e
+63890c63f55e7d65a1cf2eb0
+6389101ef55e7d65a1d92115
+*/

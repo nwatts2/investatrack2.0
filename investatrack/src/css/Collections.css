@@ -33,13 +33,20 @@
     flex-flow:row nowrap;
     justify-content:space-between;
     align-items:center;
-    background:linear-gradient(to bottom, #1e695b, transparent);
     border-radius:10px;
     width:85%;
     height:100px;
     padding:10px;
     margin-bottom:20px;
     overflow:hidden;
+}
+
+.negativeStock {
+    background:linear-gradient(to bottom, #691e1e, transparent);
+}
+
+.positiveStock {
+    background:linear-gradient(to bottom, #1e695b, transparent);
 }
 
 .stockBox h3 {

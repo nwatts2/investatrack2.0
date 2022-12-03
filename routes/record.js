@@ -15,11 +15,22 @@ router.route("/record").get(async function (req, res) {
     });
 });
 
-router.route('/record/:id').get(async function (req, res) {
+router.route('/record/id/:id').get(async function (req, res) {
     let db = await dbo.getDB();
     let newQuery = {_id: ObjectId(req.params.id)};
 
     db.collection('stocks').findOne(newQuery, function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+
+router.route('/record/name/:name').get(async function (req, res) {
+    let db = await dbo.getDB();
+    const regex = new RegExp('^' + req.params.name, 'i');
+    let newQuery = {name: regex};
+
+    db.collection('stocks').find(newQuery).toArray(function (err, result) {
         if (err) throw err;
         res.json(result);
     });
@@ -39,7 +50,7 @@ router.route("/getNews").get(async function (req, res) {
     let db = await dbo.getDB();
     let newQuery = {name: "latest-news"};
 
-    db.collection('news').findOne(newQuery, (err, result) => {
+    db.collection('utilities').findOne(newQuery, (err, result) => {
         if (err) throw err;
         res.json(result);
     });
