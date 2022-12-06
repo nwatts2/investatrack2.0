@@ -1,8 +1,102 @@
 .stockInfo {
-    border:3px solid white;
-    border-radius:5px;
+    border-radius:10px;
     width:80%;
-    height:200px;
     margin:10px 0px;
     padding:10px;
+    display:flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    background-color:#142132;
+}
+
+.stockInfo h3 {
+    margin:0px 0px;
+    font-size:1.2rem;
+    text-align:right;
+}
+
+.stockInfo h4 {
+    margin: 5px 0px;
+    font-size:1rem;
+}
+
+.stockInfo hr {
+    width:70%;
+    border:2px solid white;
+    border-radius:20px;
+}
+
+.stockInfo span {
+    font-size:1.2rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.stockInfoRow {
+    width:100%;
+    display:flex;
+    flex-flow:row nowrap;
+    justify-content:space-around;
+    align-items:center;
+    position:relative;
+}
+
+.stockInfoCol {
+    width:80%;
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:center;
+    align-items:center;
+}
+
+.stockInfoTitle {
+    border-radius:10px;
+    padding:10px;
+    margin:5px 0px;
+    width:auto;
+}
+
+.stockInfoRow img {
+    max-height:100px;
+    padding:10px;
+    border-radius:20px;
+}
+
+.stockInfoChange {
+    margin: 20px 0px;
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:center;
+    align-items:center;
+}
+
+.stockInfoColLeft {
+    width:25%;
+    display:flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items:center;
+}
+
+.stockInfoColCenter {
+    width:75%;
+    padding:10px;
+}
+
+.stockInfoColRight {
+    width:20%;
+    display:flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items:center;
+}
+
+.verticalDivision {
+    height:150px;
+    width:0px;
+    border-left:3px solid white;
 }

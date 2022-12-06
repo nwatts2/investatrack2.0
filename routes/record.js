@@ -25,12 +25,32 @@ router.route('/record/id/:id').get(async function (req, res) {
     });
 });
 
-router.route('/record/name/:name').get(async function (req, res) {
+router.route('/record/nameList/:name').get(async function (req, res) {
     let db = await dbo.getDB();
     const regex = new RegExp('^' + req.params.name, 'i');
     let newQuery = {name: regex};
 
     db.collection('stocks').find(newQuery).toArray(function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+
+router.route('/record/name/:name').get(async function (req, res) {
+    let db = await dbo.getDB();
+    let newQuery = {name: req.params.name};
+
+    db.collection('stocks').findOne(newQuery, function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+
+router.route('/record/trending').get(async function (req, res) {
+    let db = await dbo.getDB();
+    let newQuery = {name: 'trending'};
+
+    db.collection('utilities').findOne(newQuery, function (err, result) {
         if (err) throw err;
         res.json(result);
     });

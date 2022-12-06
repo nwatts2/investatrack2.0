@@ -25,6 +25,7 @@ app.listen(process.env.PORT || 3001, () => {
 
     setTimeout(async () => {
         //stocks.main();
+        stocks.getTrending();
 
         pullNews.getNews();
 

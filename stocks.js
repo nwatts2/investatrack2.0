@@ -34,6 +34,30 @@ const history = async (query, startDate, endDate, interval) => {
     }
 }
 
+const getTrending = async () => {
+    const queryOptions = {count: 25, lang: 'en-US'};
+    const result = await yahooFinance.trendingSymbols('US', queryOptions);
+    const symbols = [];
+
+    if (result && result.quotes) {
+        result.quotes.forEach((quote) => {
+            symbols.push(quote.symbol);
+        })
+    }
+
+    let db = await dbo.getDB();
+    let newQuery = {name: 'trending'};
+
+    let newValues = {$set: 
+        {
+            symbols: symbols
+        }};
+
+    db.collection('utilities').updateOne(newQuery, newValues, {upsert: true}, function (err, res) {
+        if (err) throw err;
+    });
+}
+
 const updateDB = async function (chartResult, summaryResult) {
     let db = await dbo.getDB();
     let newQuery = {name: chartResult.meta.symbol};
@@ -122,4 +146,4 @@ const main = async function () {
     updateBlacklist();
 }
 
-module.exports = {main: main};
+module.exports = {main: main, getTrending: getTrending};

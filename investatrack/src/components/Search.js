@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../css/Search.css';
 
 const SearchResult = ({ stock }) => {
     return (
+        <Link to={`/stocks/${stock.name}`}>
         <div className='searchResult'>
             <div className='searchResultColLeft'>
                 <h2>{stock.name}</h2>
@@ -22,6 +24,7 @@ const SearchResult = ({ stock }) => {
                     })}</h2>
             </div>
         </div>
+        </Link>
     );
 };
 
@@ -29,15 +32,14 @@ const Search = () => {
     const [query, setQuery] = useState('');
     const [stockList, setStockList] = useState([]);
     const [focused, setFocused] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const [timer, setTimer] = useState(setTimeout(() => {}, 500));
     const searchBox = useRef(null);
 
     let listCount = 0;
 
     useEffect(() => {
         async function getStock(name) {
-            if (!isLoading) {setIsLoading(true)}
-            const stockResponse = await fetch(`/record/name/${name}`);
+            const stockResponse = await fetch(`/record/nameList/${name}`);
 
             if (!stockResponse.ok) {
                 const message = `An error occured: ${stockResponse.statusText}`;
@@ -51,39 +53,27 @@ const Search = () => {
                 setStockList(stockListJSON);
             }
 
-            if (isLoading) {setIsLoading(false)}
         }
 
-        if (true) {
-            listCount = 0;
-            getStock(query.toUpperCase());
-        } else {
-            const timer = setTimeout(() => {
-                listCount = 0;
-                getStock(query.toUpperCase());
-
-            }, 1000);
-
-            return clearTimeout(timer);
-        }
+        listCount = 0;
+        getStock(query.toUpperCase());
+        
 
     }, [query]);
 
     function updateQuery() {
         if (searchBox && searchBox.current && searchBox.current.value !== query) {
-            setQuery(searchBox.current.value);
-        }
+            clearTimeout(timer);
+            setTimer(setTimeout(() => {
+                setQuery(searchBox.current.value);
 
-        /*if (searchBox && searchBox.current && document.activeElement === searchBox.current && !focused) {
-            setFocused(true);
-        } else if (searchBox && searchBox.current && document.activeElement !== searchBox.current && focused) {
-            setFocused(false);
-        }*/
+            }, 500));
+        }
     }
 
     return (
         <div className='searchBox'>
-            <input type='search' onChange={updateQuery} onFocus={() => {setFocused(true)}} onBlur={() => {setFocused(false)}} ref={searchBox} placeholder="Search for a stock"/>
+            <input type='search' onChange={updateQuery} onFocus={() => {setFocused(true)}} onBlur={() => {setTimeout(() => {setFocused(false)}, 100)}} ref={searchBox} placeholder="Search for a stock"/>
             {(query.length !== 0 && focused) &&
             <div className='searchResultsBox'>
                 {stockList.map((stock) => {
