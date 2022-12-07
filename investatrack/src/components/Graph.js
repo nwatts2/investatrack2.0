@@ -1,9 +1,10 @@
+import LineChart from '../components/LineChart';
 import '../css/Graph.css';
 
-const Graph = () => {
+const Graph = ({ currentStock }) => {
     return (
         <div className='graphSection'>
-            <h2>Graph Section</h2>
+            <LineChart currentStock={currentStock.history ? currentStock : []} />
         </div>
     );
 }

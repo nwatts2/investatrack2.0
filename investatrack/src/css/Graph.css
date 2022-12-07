@@ -1,8 +1,37 @@
 .graphSection {
-    border:3px solid white;
     border-radius:5px;
-    width:70%;
-    height:300px;
+    width:80%;
     margin:10px 0px;
-    padding:10px;
+    padding:30px 10px;
+    display:flex;
+    flex-flow:row nowrap;
+    justify-content:center;
+    align-items:center;
+}
+
+.graphSection svg {
+    overflow:visible;
+    position:relative;
+}
+
+.graphSection text {
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size:1.2rem;
+    fill:white;
+}
+
+.graphSection .axis .domain,
+.graphSection .axis.xAxis line {
+    display:none;
+}
+
+.mousePath {
+    stroke: rgb(255, 205, 53)
+}
+
+.hoverBox {
+    fill: rgba(60,60,60,.9);
+    stroke: white;
+    stroke-width:2;
+    transition: all ease-in-out .5s;
 }

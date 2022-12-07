@@ -1,6 +1,6 @@
 .collections {
-    border: 3px solid white;
-    border-radius:5px;
+    background: radial-gradient(ellipse, #142132 40%, transparent 70%);
+    border-radius:20px;
     display:flex;
     flex-flow:column nowrap;
     justify-content:flex-start;

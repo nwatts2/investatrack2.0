@@ -35,7 +35,7 @@ const history = async (query, startDate, endDate, interval) => {
 }
 
 const getTrending = async () => {
-    const queryOptions = {count: 25, lang: 'en-US'};
+    const queryOptions = {count: 100, lang: 'en-US'};
     const result = await yahooFinance.trendingSymbols('US', queryOptions);
     const symbols = [];
 

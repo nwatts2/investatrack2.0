@@ -86,12 +86,12 @@ const Home = () => {
                     }) : '$0.00'}</h1>
                     <hr />
                     <StockSelector stockList={stockList} setStock={setCurrentStock}/>
-                    <Graph />
+                    <Graph currentStock={currentStock}/>
                     <StockInfo stock={currentStock ? currentStock : {}}/>
-                    <h2>Finance News</h2>
-                    <News />
                 </div>
             </div>
+            <h2>Finance News</h2>
+            <News />
         </div>
        
     );
