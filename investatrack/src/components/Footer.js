@@ -49,7 +49,7 @@ const Footer = () => {
 
     return (
         <div className='footer'>
-            <div className='trendingCycle'>
+            <div className='trendingCycle' style={stockList.length === 0 ? {color: 'transparent', animation: 'none'} : {color: 'white', animation: 'scroll 60s linear infinite'}}>
                 {stockList.map((stock) => {
                     if (stock && stock.name && stock.price) {
                         return (

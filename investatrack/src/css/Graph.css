@@ -1,10 +1,9 @@
 .graphSection {
     border-radius:5px;
     width:80%;
-    margin:10px 0px;
     padding:30px 10px;
     display:flex;
-    flex-flow:row nowrap;
+    flex-flow:column nowrap;
     justify-content:center;
     align-items:center;
 }

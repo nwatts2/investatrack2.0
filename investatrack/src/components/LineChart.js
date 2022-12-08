@@ -1,9 +1,15 @@
 import { useState, useEffect } from 'react';
 import * as d3 from 'd3';
 
-const LineChart = ({ currentStock }) => {
+const LineChart = ({ currentStock, range, dataSelect }) => {
     const [activeIndex, setActiveIndex] = useState(null);
     const [data, setData] = useState([]);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const colors = ['steelblue', 'orange', 'mediumseagreen', '#ff6961'];
+    const hoverHeight = 200;
 
     const formatDate = d3.timeFormat('%m/%d/%Y');
     const formatShortDate = d3.timeFormat("%m/%d");
@@ -38,15 +44,52 @@ const LineChart = ({ currentStock }) => {
     const height = 400 - margin.top - margin.bottom, width = 1000 - margin.left - margin.right;
     const color = 'orange';
 
-    const yMin = d3.min(data, (d) => d.close);
-    const yMax = d3.max(data, (d) => d.close);
+    const yMin = d3.min(data, (d) => {
+        if(d.date > range[1]) {
+            const dataArray = [];
 
-    const getX = d3.scaleTime().domain(d3.extent(data, (d) => d.date)).range([0, width]);
+            if (dataSelect.Open) {dataArray.push(d.open)}
+            if (dataSelect.Close) {dataArray.push(d.close)}
+            if (dataSelect.High) {dataArray.push(d.high)}
+            if (dataSelect.Low) {dataArray.push(d.low)}
+
+            return Math.min(...dataArray);
+        }
+    });
+
+    const yMax = d3.max(data, (d) => {
+        if(d.date > range[1]) {
+            const dataArray = [];
+
+            if (dataSelect.Open) {dataArray.push(d.open)}
+            if (dataSelect.Close) {dataArray.push(d.close)}
+            if (dataSelect.High) {dataArray.push(d.high)}
+            if (dataSelect.Low) {dataArray.push(d.low)}
+
+            return Math.max(...dataArray);
+        }
+    });
+
+    const getX = d3.scaleTime().domain(d3.extent(data, (d) => {if(d.date > range[1]) {return d.date}})).range([0, width]);
     const getY = d3.scaleLinear().domain([yMin - 1, yMax + 2]).range([height, 0]);
 
     const getXAxis = (ref) => {
-        const xAxis = d3.axisBottom(getX);
-        d3.select(ref).call(xAxis.tickFormat(d3.timeFormat("%b %y")));
+        let tickText = '';
+
+        if (range[0] === '1d') {
+            tickText = '%b %d';
+        } else if (range[0] === '5d') {
+            tickText = '%b %d';
+        }  else if (range[0] === '1m' || range[0] === 'MTD') {
+            tickText = '%m/%d';
+        } else if (range[0] === '6m') {
+            tickText = '%b %Y';
+        } else if (range[0] === '1y' || range[0] === 'YTD') {
+            tickText = "%b '%y";
+        }
+
+        const xAxis = d3.axisBottom(getX).ticks(6);
+        d3.select(ref).call(xAxis.tickFormat(d3.timeFormat(tickText)));
     };
 
     const getYAxis = (ref) => {
@@ -54,10 +97,31 @@ const LineChart = ({ currentStock }) => {
         d3.select(ref).call(yAxis);
     }
 
-    const linePath = d3
+    const openPath = d3
+                        .line()
+                        .x((d) => getX(d.date))
+                        .y((d) => getY(d.open))
+                        //.defined(((d) => d.date > range[1]))
+                        .curve(d3.curveMonotoneX)(data);
+
+    const closePath = d3
                         .line()
                         .x((d) => getX(d.date))
                         .y((d) => getY(d.close))
+                        //.defined(((d) => d.date > range[1]))
+                        .curve(d3.curveMonotoneX)(data);
+
+    const highPath = d3
+                        .line()
+                        .x((d) => getX(d.date))
+                        .y((d) => getY(d.high))
+                        //.defined(((d) => d.date > range[1]))
+                        .curve(d3.curveMonotoneX)(data);
+    const lowPath = d3
+                        .line()
+                        .x((d) => getX(d.date))
+                        .y((d) => getY(d.low))
+                        //.defined(((d) => d.date > range[1]))
                         .curve(d3.curveMonotoneX)(data);
 
     const areaPath = d3
@@ -65,6 +129,7 @@ const LineChart = ({ currentStock }) => {
                         .x((d) => getX(d.date))
                         .y0((d) => getY(d.close))
                         .y1(() => getY(yMin - 1))
+                        //.defined(((d) => d.date > range[1]))
                         .curve(d3.curveMonotoneX)(data);
 
     const handleMouseMove = (e) => {
@@ -92,8 +157,28 @@ const LineChart = ({ currentStock }) => {
                         transform={`translate(0,${height})`} 
                     />
 
-                    <path fill={color} d={areaPath} opacity={0.3} style={{ transition: "ease-out .1s" }} />
-                    <path strokeWidth={3} fill='none' stroke={color} d={linePath} style={{ transition: "ease-out .1s" }} />
+                    <clipPath id='boundingBox'>
+                        <rect x='0' y='0' width={width} height={height} />
+                    </clipPath>
+
+                    {//<path fill={color} d={areaPath} clipPath='url(#boundingBox)' opacity={0.3} style={{ transition: "ease-out .25s" }} />
+                    }
+
+                    {dataSelect.Open &&
+                        <path strokeWidth={3} clipPath='url(#boundingBox)' fill='none' stroke={colors[0]} d={openPath} style={{ transition: "ease-out .25s" }} />
+                    }
+
+                    {dataSelect.Close &&
+                    <path strokeWidth={3} clipPath='url(#boundingBox)' fill='none' stroke={colors[1]} d={closePath} style={{ transition: "ease-out .25s" }} />
+                    }
+
+                    {dataSelect.High &&
+                        <path strokeWidth={3} clipPath='url(#boundingBox)' fill='none' stroke={colors[2]} d={highPath} style={{ transition: "ease-out .25s" }} />
+                    }
+
+                    {dataSelect.Low &&
+                        <path strokeWidth={3} clipPath='url(#boundingBox)' fill='none' stroke={colors[3]} d={lowPath} style={{ transition: "ease-out .25s" }} />
+                    }
 
                     {data.map((item, index) => {
                         return (
@@ -107,7 +192,7 @@ const LineChart = ({ currentStock }) => {
                                 {index === activeIndex &&
                                     <rect className='hoverBox'
                                         x={getX(item.date) - 200}
-                                        y={getY(item.close) - 200}
+                                        y={hoverHeight - 200}
                                         width={150}
                                         height={200}
                                         rx={15}
@@ -117,7 +202,7 @@ const LineChart = ({ currentStock }) => {
                                 <text
                                     fill="#fff"
                                     x={getX(item.date) - 125}
-                                    y={getY(item.close) - 175}
+                                    y={hoverHeight - 175}
                                     style={{textDecoration: 'underline'}}
                                     textAnchor='middle'>
                                     {index === activeIndex ? currentStock.name : ''}
@@ -126,7 +211,7 @@ const LineChart = ({ currentStock }) => {
                                 <text
                                     fill="#fff"
                                     x={getX(item.date) - 125}
-                                    y={getY(item.close) - 150}
+                                    y={hoverHeight - 150}
                                     textAnchor='middle'>
                                     {index === activeIndex ? formatLongDate(item.date) : ''}
                                 </text>
@@ -134,7 +219,7 @@ const LineChart = ({ currentStock }) => {
                                 <text
                                     fill="#fff"
                                     x={getX(item.date) - 165}
-                                    y={getY(item.close) - 110}
+                                    y={hoverHeight - 110}
                                     textAnchor='middle'>
                                     {index === activeIndex ? 'Open:' : ''}
                                 </text>
@@ -142,7 +227,7 @@ const LineChart = ({ currentStock }) => {
                                 <text
                                     fill="#fff"
                                     x={getX(item.date) - 90}
-                                    y={getY(item.close) - 110}
+                                    y={hoverHeight - 110}
                                     textAnchor='middle'>
                                     {index === activeIndex ? item.open.toLocaleString('en-US', {
                                         style: 'currency',
@@ -153,7 +238,7 @@ const LineChart = ({ currentStock }) => {
                                 <text
                                     fill="#fff"
                                     x={getX(item.date) - 165}
-                                    y={getY(item.close) - 80}
+                                    y={hoverHeight - 80}
                                     textAnchor='middle'>
                                     {index === activeIndex ? 'Close:' : ''}
                                 </text>
@@ -161,7 +246,7 @@ const LineChart = ({ currentStock }) => {
                                 <text
                                     fill="#fff"
                                     x={getX(item.date) - 90}
-                                    y={getY(item.close) - 80}
+                                    y={hoverHeight - 80}
                                     textAnchor='middle'>
                                     {index === activeIndex ? item.close.toLocaleString('en-US', {
                                         style: 'currency',
@@ -172,7 +257,7 @@ const LineChart = ({ currentStock }) => {
                                 <text
                                     fill="#fff"
                                     x={getX(item.date) - 165}
-                                    y={getY(item.close) - 50}
+                                    y={hoverHeight - 50}
                                     textAnchor='middle'>
                                     {index === activeIndex ? 'High:' : ''}
                                 </text>
@@ -180,7 +265,7 @@ const LineChart = ({ currentStock }) => {
                                 <text
                                     fill="#fff"
                                     x={getX(item.date) - 90}
-                                    y={getY(item.close) - 50}
+                                    y={hoverHeight - 50}
                                     textAnchor='middle'>
                                     {index === activeIndex ? item.high.toLocaleString('en-US', {
                                         style: 'currency',
@@ -191,7 +276,7 @@ const LineChart = ({ currentStock }) => {
                                 <text
                                     fill="#fff"
                                     x={getX(item.date) - 165}
-                                    y={getY(item.close) - 20}
+                                    y={hoverHeight - 20}
                                     textAnchor='middle'>
                                     {index === activeIndex ? 'Low:' : ''}
                                 </text>
@@ -199,7 +284,7 @@ const LineChart = ({ currentStock }) => {
                                 <text
                                     fill="#fff"
                                     x={getX(item.date) - 90}
-                                    y={getY(item.close) - 20}
+                                    y={hoverHeight - 20}
                                     textAnchor='middle'>
                                     {index === activeIndex ? item.low.toLocaleString('en-US', {
                                         style: 'currency',
@@ -207,15 +292,53 @@ const LineChart = ({ currentStock }) => {
                                     }) : ''}
                                 </text>
 
-                                <circle
-                                    cx={getX(item.date)}
-                                    cy={getY(item.close)}
-                                    r={index === activeIndex ? 6 : 0}
-                                    fill={color}
-                                    strokeWidth={index === activeIndex ? 2 : 0}
-                                    stroke='#fff'
-                                    style={{ transition: "ease-out .1s" }}
-                                />
+                                {dataSelect.Open &&
+                                    <circle
+                                        cx={getX(item.date)}
+                                        cy={getY(item.open)}
+                                        r={index === activeIndex ? 6 : 0}
+                                        fill={colors[0]}
+                                        strokeWidth={index === activeIndex ? 2 : 0}
+                                        stroke='#fff'
+                                        style={{ transition: "ease-out .1s" }}
+                                    />
+                                }
+
+                                {dataSelect.Close &&
+                                    <circle
+                                        cx={getX(item.date)}
+                                        cy={getY(item.close)}
+                                        r={index === activeIndex ? 6 : 0}
+                                        fill={colors[1]}
+                                        strokeWidth={index === activeIndex ? 2 : 0}
+                                        stroke='#fff'
+                                        style={{ transition: "ease-out .1s" }}
+                                    />
+                                }
+
+                                {dataSelect.High &&
+                                    <circle
+                                        cx={getX(item.date)}
+                                        cy={getY(item.high)}
+                                        r={index === activeIndex ? 6 : 0}
+                                        fill={colors[2]}
+                                        strokeWidth={index === activeIndex ? 2 : 0}
+                                        stroke='#fff'
+                                        style={{ transition: "ease-out .1s" }}
+                                    />
+                                }
+
+                                {dataSelect.Low &&
+                                    <circle
+                                        cx={getX(item.date)}
+                                        cy={getY(item.low)}
+                                        r={index === activeIndex ? 6 : 0}
+                                        fill={colors[3]}
+                                        strokeWidth={index === activeIndex ? 2 : 0}
+                                        stroke='#fff'
+                                        style={{ transition: "ease-out .1s" }}
+                                    />
+                                }
                             </g>
                         )
                     })}

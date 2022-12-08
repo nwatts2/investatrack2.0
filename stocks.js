@@ -66,7 +66,7 @@ const updateDB = async function (chartResult, summaryResult) {
         {
             longName: summaryResult.price.longName, 
             currency: chartResult.meta.currency, 
-            //history: chartResult.quotes,
+            history: chartResult.quotes,
             change: summaryResult.price.regularMarketChange,
             changePercent: summaryResult.price.regularMarketChangePercent,
             price: summaryResult.price.regularMarketPrice,
@@ -116,7 +116,14 @@ const updateBlacklist = async function () {
 }
 
 const main = async function () {
-    const startDate = '2020-11-22T00:00:00.000Z', endDate = '2022-11-22T00:00:00.000Z', interval = '1d';
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    const endDate = today.toISOString();
+
+    today.setFullYear(today.getFullYear() - 2);
+
+    const startDate = today.toISOString(), interval = '1d';
 
     const start = Date.now();
 

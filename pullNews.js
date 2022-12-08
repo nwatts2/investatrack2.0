@@ -11,7 +11,7 @@ module.exports = {
         const country = 'us', category='business', pageSize='10';
         const url = `https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&pageSize=${pageSize}&apiKey=${process.env.NEWS_API}`
     
-        /*const newsResponse = await fetch(url);
+        const newsResponse = await fetch(url);
 
         if (newsResponse.ok) {
             console.log('News Pulled Successfully');
@@ -28,6 +28,6 @@ module.exports = {
                 if (err) throw err;
                 console.log('News Updated');
             });
-        }*/
+        }
     }
 }

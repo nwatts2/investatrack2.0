@@ -1,3 +1,18 @@
+.stockSelectorContainer {
+    display:flex;
+    flex-flow:column nowrap;
+    align-items:center;
+    justify-content:center;
+    max-width:80%;
+    padding:0;
+    background: linear-gradient(to right, transparent 0%, #142132 30%, #142132 70%, transparent 100%);
+}
+
+.stockSelectorContainer hr {
+    width:100%;
+    margin:0px 0px;
+}
+
 .stockSelector {
     display:flex;
     flex-flow:row nowrap;
@@ -5,6 +20,24 @@
     justify-content:center;
     overflow-x:auto;
     width:100%;
+
+    --mask-height: 30px;
+    padding:0px var(--mask-height);
+
+    --mask-image-content: linear-gradient(
+        to right,
+        transparent,
+        black var(--mask-height),
+        black calc(100% - var(--mask-height)),
+        transparent
+    );
+    --mask-image-scrollbar: linear-gradient(black, black);
+
+    mask-image: var(--mask-image-content), var(--mask-image-scrollbar);
+    mask-size: 100% 100%, 100% 0;
+
+    mask-position: 0 0, 100% 0;
+    mask-repeat: no-repeat, no-repeat;
 }
 
 .stockSelector button {
@@ -14,7 +47,7 @@
     color: white;
 
     border:3px solid white;
-    font-size:1rem;
+    font-size:1.2rem;
     font-weight:bold;
     padding:5px 10px;
     margin:0px 5px;
@@ -26,4 +59,8 @@
 .stockSelector button:hover {
     opacity:.7;
     transition: all .2s;
+}
+
+.stockSelector .selected {
+    background-color: mediumseagreen;
 }

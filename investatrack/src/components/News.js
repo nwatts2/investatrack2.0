@@ -33,7 +33,7 @@ const ArticleBox = ({article}) => {
                         </div>
                         <span>{description}</span>
                     </div>
-                    <hr />
+                    <div className='horizontalLine' />
                     <h4>{article.source.name}</h4>
 
                 </div>

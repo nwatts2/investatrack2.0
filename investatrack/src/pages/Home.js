@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import Search from '../components/Search';
 import Collections from '../components/Collections';
 import StockSelector from '../components/StockSelector';
+import RangeSelector from '../components/RangeSelector';
+import DataSelector from '../components/DataSelector';
 import Graph from '../components/Graph';
 import StockInfo from '../components/StockInfo';
 import News from '../components/News';
@@ -10,6 +12,12 @@ const Home = () => {
     const [currentUser, setCurrentUser] = useState({});
     const [currentStock, setCurrentStock] = useState({});
     const [stockList, setStockList] = useState([]);
+
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    const [range, setRange] = useState(['1m', new Date().setDate(today.getDate() - 31)]);
+    const [dataSelect, setDataSelect] = useState({Open: true, Close: true, High: false, Low: false});
 
     useEffect(() => {
         getUser();
@@ -80,13 +88,21 @@ const Home = () => {
             <div className='row'>
                 <Collections currentUser={currentUser}/>
                 <div className='homeMain'>
-                    <h1>Your Money - {currentUser.sMoney ? currentUser.sMoney.toLocaleString('en-US', {
-                        style: 'currency',
-                        currency:'USD'
-                    }) : '$0.00'}</h1>
-                    <hr />
-                    <StockSelector stockList={stockList} setStock={setCurrentStock}/>
-                    <Graph currentStock={currentStock}/>
+                    <div className='title'>
+                        <h2 style={{textDecoration: 'underline'}}>{currentUser && currentUser.name ? currentUser.name + "'s" : 'Your'} Portfolio </h2> 
+                        <h1>{currentUser.sMoney ? currentUser.sMoney.toLocaleString('en-US', {
+                            style: 'currency',
+                            currency:'USD'
+                        }) : '$0.00'}</h1>
+                    </div>
+                    <StockSelector stockList={stockList} currentStock={currentStock} setStock={setCurrentStock}/>
+                    <div className='graphTitleRow'>
+                        <RangeSelector range={range} setRange={setRange} />
+                        <h2>-{currentStock && currentStock.name ? currentStock.name : ''}-</h2>
+                        <DataSelector dataSelect={dataSelect} setDataSelect={setDataSelect} />
+                    </div>
+                    
+                    <Graph currentStock={currentStock} range={range} dataSelect={dataSelect} />
                     <StockInfo stock={currentStock ? currentStock : {}}/>
                 </div>
             </div>

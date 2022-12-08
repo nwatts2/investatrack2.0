@@ -77,3 +77,36 @@ a {
   border-radius:20px;
   margin:10px 0px;
 }
+
+.title {
+  width:100%;
+  padding:10px;
+  display:flex;
+  flex-flow:column nowrap;
+  justify-content:center;
+  align-items:center;
+}
+
+.title h1 {
+  margin:10px 0px 0px 0px;
+  font-size:4rem;
+}
+
+.title h2 {
+  margin:0;
+  font-size:3rem;
+}
+
+.graphTitleRow {
+  display:flex;
+  flex-flow:row nowrap;
+  justify-content: center;
+  align-items:center;
+  width:100%;
+  margin:20px 0px 0px 0px;
+}
+
+.graphTitleRow h2 {
+  font-size:3rem;
+  margin:0;
+}

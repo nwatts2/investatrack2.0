@@ -1,16 +1,49 @@
 .newsMain {
     width:95%;
     margin:10px 0px;
-    padding:0px;
     display:flex;
     flex-flow: row nowrap;
     justify-content:flex-start;
     align-items:center;
-    overflow-y:hidden;
     overflow-x:auto;
-    /*background-color:#2e4766;
-    border-radius:10px;
-    box-shadow:0px 0px 5px 5px #1b3046;*/
+    
+    --scrollbar-width: 8px;
+    --mask-height: 30px;
+    padding:0px var(--mask-height) 10px var(--mask-height);
+
+    --mask-image-content: linear-gradient(
+        to right,
+        transparent,
+        black var(--mask-height),
+        black calc(100% - var(--mask-height)),
+        transparent
+    );
+    --mask-size-content: 100% calc(100% - var(--scrollbar-width));
+    --mask-image-scrollbar: linear-gradient(black, black);
+    --mask-size-scrollbar: 100% var(--scrollbar-width);
+
+    mask-image: var(--mask-image-content), var(--mask-image-scrollbar);
+    mask-size: var(--mask-size-content), var(--mask-size-scrollbar);
+
+    mask-position: 0 0, 0 100%;
+    mask-repeat: no-repeat, no-repeat;
+
+    scrollbar-width:thin;
+    scrollbar-color:white transparent;
+
+}
+
+.newsMain::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+}
+
+.newsMain::-webkit-scrollbar-thumb {
+    background-color:white;
+    border-radius: 9999px;
+}
+
+.newsMain::-webkit-scrollbar-track {
+    background-color:transparent;
 }
 
 .articleBox {
@@ -25,6 +58,7 @@
     align-items:center;
     justify-content:space-between;
     box-shadow:2px 2px 5px #171718;
+    position:relative;
 }
 
 .articleBox img {
@@ -34,10 +68,12 @@
     border-radius:10px;
 }
 
-.articleBox hr {
+.articleBox .horizontalLine {
     margin:0px;
-    position:relative;
-    bottom:0px;    
+    position:absolute;
+    bottom:55px;
+    width:30%;
+    border-top:2px solid white;  
 }
 
 .articleInfo {
@@ -82,7 +118,7 @@
     font-family: 'Lato';
     font-size:1rem;
     font-weight:italic;
-    margin:0px;
+    margin:10px 0px 0px 0px;
     background-color:#182a3f;
     border-radius: 10px;
     min-width:70%;

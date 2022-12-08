@@ -27,10 +27,10 @@ app.listen(process.env.PORT || 3001, () => {
         //stocks.main();
         stocks.getTrending();
 
-        pullNews.getNews();
+        //pullNews.getNews();
 
         setInterval(() => {
-            pullNews.getNews();
+            //pullNews.getNews();
         }, 1800000);
 
     }, 3500);

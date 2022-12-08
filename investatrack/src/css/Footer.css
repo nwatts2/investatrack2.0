@@ -1,8 +1,8 @@
 .footer {
     background-color:#101010;
     width:100%;
-    min-height:40px;
-    padding:5px;
+    height:45px;
+    padding:0px;
     z-index:1;
     position:fixed;
     bottom:0;
@@ -32,6 +32,9 @@ li:hover {
     flex-flow: row nowrap;
     align-items:center;
     justify-content:center;
+    width:100%;
+    transform: translateX(170%);
+    animation: scroll 60s linear infinite;
 }
 
 .trendingEntry {
@@ -46,4 +49,8 @@ li:hover {
     white-space: nowrap;
     margin:0px 15px;
     font-size: 1.2rem;
+}
+
+@keyframes scroll {
+    to {transform: translateX(-170%);}
 }
