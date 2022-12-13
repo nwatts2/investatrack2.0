@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../css/Popular.css';
+import '../css/Recommended.css';
 
-const PopularEntry = ( {stock} ) => {
+const RecommendedEntry = ({ stock }) => {
     return (
         <Link to={`/stocks/${stock.name}`}>
-        <div className='popularEntry'>
-            <div className='popularEntryColLeft'>
+        <div className='recommendedEntry'>
+            <div className='recommendedEntryColLeft'>
                 <h2>{stock.name}</h2>
                 <h3>{stock.longName}</h3>
             </div>
-            <div className='popularEntryColRight'>
+            <div className='recommendedEntryColRight'>
                 <h3 className={stock.change ? (stock.change > 0 ? 'positiveEntry' : 'negativeEntry') : ''}>{stock.change ? (stock.change > 0 ? "+" + stock.change.toLocaleString('en-US', {
                         style: 'currency',
                         currency:'USD'
@@ -28,12 +28,12 @@ const PopularEntry = ( {stock} ) => {
     );
 }
 
-const Popular = () => {
+const Recommended = ({ currentUser }) => {
     const [stockList, setStockList] = useState([]);
 
     useEffect(() => {
-        async function getTrending () {
-            const stockResponse = await fetch(`/record/trending`);
+        async function getRecommended () {
+            const stockResponse = await fetch(`/record/recommended/${currentUser._id}`);
 
             if (!stockResponse.ok) {
                 const message = `An error occured: ${stockResponse.statusText}`;
@@ -47,32 +47,22 @@ const Popular = () => {
                 setStockList(stockJSON);
             }
         }
-        
-        getTrending();
 
-    }, []);
+        
+        if (currentUser._id) {
+            getRecommended();
+        }
+
+    }, [JSON.stringify(currentUser)]);
 
     return (
-        <div className='popular'>
-            <h2>Most Popular</h2>
-            <div className='popularList'>
-                <div className='leftCol'>
-                    {stockList.length > 0 ? stockList.map((stock, index) => {
-                        if (index < 5) {
-                            return <PopularEntry stock={stock} />
-                        }
-                    }) : ''}
-                </div>
-                <div className='rightCol'>
-                    {stockList.map((stock, index) => {
-                            if (index < 10 && index >= 5) {
-                                return <PopularEntry stock={stock} />
-                            }
-                        })}
-                </div>
-            </div>
+        <div className='recommended'>
+            <h2>Recommended Stocks</h2>
+            {stockList.length > 0 ? stockList.map((stock) => {
+                <RecommendedEntry stock={stock} />
+            }) : ''}
         </div>
     );
 }
 
-export default Popular;
+export default Recommended;

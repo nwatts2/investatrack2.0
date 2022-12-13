@@ -1,5 +1,4 @@
 .collections {
-    background: radial-gradient(ellipse, #142132 40%, transparent 70%);
     border-radius:20px;
     display:flex;
     flex-flow:column nowrap;
@@ -12,17 +11,48 @@
     padding:15px 5px;
 }
 
-.stockTable {
+.collectionsTitle {
+    border:3px solid white;
+    border-radius: 5px;
     width:100%;
+    padding: 20px;
+    margin: 0px;
+}
+
+.collections h2 {
+    font-size:3rem;
+    margin:0px;
+}
+
+.collections span {
+    font-size: 1.1rem;
+    margin: 5px 0px;
+}
+
+.stockList {
+    width:90%;
+    margin: 10px 0px 0px 0px;
+    border-top: none;
+    border-radius: 0px 0px 10px 10px;
     display:flex;
     flex-flow:column nowrap;
     justify-content:flex-start;
     align-items:center;
     overflow-y:auto;
+    background: radial-gradient(ellipse, #142132 40%, transparent 70%);
+}
+
+.stockTable {
+    width:100%;
+    margin:0;
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:flex-start;
+    align-items:center;
 }
 
 .stockTable hr {
-    width:90%;
+    width:10%;
     border:2px solid white;
     border-radius:20px;
     margin:10px 0px;
@@ -37,7 +67,6 @@
     width:85%;
     height:100px;
     padding:10px;
-    margin-bottom:20px;
     overflow:hidden;
 }
 

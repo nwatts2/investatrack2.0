@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Fugaz+One&display=swap');
+
 * {
   box-sizing:border-box;
 }
@@ -88,13 +90,22 @@ a {
 }
 
 .title h1 {
-  margin:10px 0px 0px 0px;
+  margin:10px 0px 20px 0px;
   font-size:4rem;
+  font-family:'Fugaz One';
+  background: radial-gradient(ellipse, #1e695b, transparent 70%);
+  text-shadow: 2px 2px 5px black;
+  border-radius: 9999px;
+  padding:10px;
 }
 
 .title h2 {
   margin:0;
   font-size:3rem;
+}
+
+.graphSection {
+  width:80%;
 }
 
 .graphTitleRow {
@@ -109,4 +120,36 @@ a {
 .graphTitleRow h2 {
   font-size:3rem;
   margin:0;
+  font-family:'Fugaz One'
 }
+
+.singleAssetTitle {
+  display:flex;
+  flex-flow: column nowrap;
+  justify-content:center;
+  align-items:center;
+  width:100%;
+}
+
+.singleAssetTitle h1 {
+  font-family:'Fugaz One';
+  margin:20px 0px 0px 0px;
+}
+
+.singleAssetTitle h2 {
+  margin:5px 0px 5px 0px;
+  font-size:1.8rem;
+}
+
+.singleAssetGraph {
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-flow:column nowrap;
+  justify-content:center;
+  align-items:center;
+  width:80%;
+}
+
+.negativeEntry {color:red;}
+.positiveEntry {color:green;}

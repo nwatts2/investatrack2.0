@@ -71,7 +71,7 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
     });
 
     const getX = d3.scaleTime().domain(d3.extent(data, (d) => {if(d.date > range[1]) {return d.date}})).range([0, width]);
-    const getY = d3.scaleLinear().domain([yMin - 1, yMax + 2]).range([height, 0]);
+    const getY = d3.scaleLinear().domain([yMin - (.1 * (yMax - yMin)), yMax + (.1 * (yMax - yMin))]).range([height, 0]);
 
     const getXAxis = (ref) => {
         let tickText = '';

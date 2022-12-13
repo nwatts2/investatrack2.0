@@ -90,7 +90,7 @@ const Home = () => {
                 <div className='homeMain'>
                     <div className='title'>
                         <h2 style={{textDecoration: 'underline'}}>{currentUser && currentUser.name ? currentUser.name + "'s" : 'Your'} Portfolio </h2> 
-                        <h1>{currentUser.sMoney ? currentUser.sMoney.toLocaleString('en-US', {
+                        <h1>{currentUser.cMoney ? currentUser.cMoney.toLocaleString('en-US', {
                             style: 'currency',
                             currency:'USD'
                         }) : '$0.00'}</h1>

@@ -1,6 +1,8 @@
 const yahooFinance = require('yahoo-finance2').default;
 const dbo = require('./conn');
 
+const ObjectId = require('mongodb').ObjectId;
+
 var blacklist = [];
 
 const queryStocks = async () => {
@@ -55,6 +57,70 @@ const getTrending = async () => {
 
     db.collection('utilities').updateOne(newQuery, newValues, {upsert: true}, function (err, res) {
         if (err) throw err;
+    });
+}
+
+const getRecommended = async () => {    
+    let db = await dbo.getDB();
+    db.collection('users').find().toArray(async function (err, result) {
+        for (let user of result) {
+            const stocks = [];
+
+            if (user.stocks) {
+                for (let stock of user.stocks) {
+                    if (stock.name) {
+                        stocks.push(stock.name)
+                    }
+                }
+            }
+
+            const result = await yahooFinance.recommendationsBySymbol(stocks);
+
+            const recommended = [];
+
+            if (result) {
+                for (let response of result) {
+                    for (let symbol of response.recommendedSymbols) {
+                        if (!stocks.includes(symbol.symbol)) {
+                            recommended.push(symbol);
+                        }
+                    }
+                }
+            }
+
+            let i = 0;
+            const length = recommended.length;
+
+            while (i < length) {
+                let j = 0;
+                while (j < length) {
+                    if (recommended[i].score < recommended[j].score && i < j) {
+                        const tempObj = recommended[i];
+                        recommended[i] = recommended[j];
+                        recommended[j] = tempObj;
+                    }
+
+                    j++;
+                }
+                i++;
+            }
+
+            const finalList = [];
+            for (let stock of recommended) {
+                let found = false;
+
+                for (let symbol of finalList) {
+                    if (stock.symbol === symbol.symbol) {found = true;}
+                }
+
+                if (!found) {finalList.push(stock)}
+            }
+
+            db.collection('users').updateOne({_id: user._id}, {$set: {recommended: finalList}}, function (err, result) {
+                if (err) throw err;
+            });
+
+        }
     });
 }
 
@@ -153,4 +219,4 @@ const main = async function () {
     updateBlacklist();
 }
 
-module.exports = {main: main, getTrending: getTrending};
+module.exports = {main: main, getTrending: getTrending, getRecommended: getRecommended};

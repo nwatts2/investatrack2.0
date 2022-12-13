@@ -4,7 +4,7 @@ import StockSelector from '../components/StockSelector';
 import Graph from '../components/Graph';
 import StockInfo from '../components/StockInfo';
 import TypeMenu from '../components/TypeMenu';
-import Sell from '../components/Sell';
+import BuySell from '../components/BuySell';
 
 const Assets = () => {
     const [currentUser, setCurrentUser] = useState({});
@@ -81,7 +81,7 @@ const Assets = () => {
             <StockSelector stockList={stockList} setStock={setCurrentStock}/>
             <Graph />
             <div className='row'>
-                <Sell />
+                <BuySell />
                 <StockInfo stock={currentStock}/>
             </div>
         </div>

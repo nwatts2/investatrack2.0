@@ -60,6 +60,10 @@
     width:auto;
 }
 
+.stockInfoTitle h2 {
+    font-family:'Fugaz One';
+}
+
 .stockInfoRow img {
     max-height:100px;
     padding:10px;

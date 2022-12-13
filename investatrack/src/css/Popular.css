@@ -1,6 +1,89 @@
 .popular {
-    border:3px solid white;
     border-radius:5px;
-    width:69%;
-    height:300px;
+    width:55%;
+
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:flex-start;
+    align-items:center;
+}
+
+.popular h2 {
+    text-decoration: underline;
+}
+
+.popularList {
+    display:flex;
+    flex-flow:row nowrap;
+    justify-content:center;
+    align-items:center;
+    margin: 10px 0px 0px 0px;
+    width:100%;
+}
+
+.popularList h2 {
+    text-decoration: none;
+}
+
+.popularList.leftCall, .popularList.leftCall {
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:center;
+    align-items:center;
+    width:50%;
+    height:100%;
+}
+
+.popularList.leftCall {
+    border-left: 2px solid white;
+}
+
+.popularEntry {
+    display:flex;
+    flex-flow:row nowrap;
+    justify-content:space-between;
+    align-items:center;
+    margin:10px 5px;
+    border-radius:20px;
+    padding: 10px 10px;
+    background-color:#142132;
+
+}
+
+.popularEntry:hover {
+    opacity:0.7;
+}
+
+.popularEntry h2 {
+    font-size:1.8rem;
+    margin:0px;
+}
+
+.popularEntry h3 {
+    font-size:1.2rem;
+    margin:0px;
+    font-weight:light;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.popularEntryColLeft, .popularEntryColRight {
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:center;
+}
+
+.popularEntryColLeft {
+    align-items:flex-start;
+    width:60%;
+    text-align:left;
+}
+.popularEntryColRight {
+    align-items:flex-end;
+    width:40%;
+    text-align:right;
 }

@@ -57,17 +57,24 @@ const StockBox = ({ stock }) => {
 const Collections = ({ currentUser }) => {
     return (
         <div className='collections'>
-            <h2>Collections</h2>
-            {currentUser.stocks &&
-                currentUser.stocks.map((stock) => {
-                    return (
-                        <div className='stockTable'>
-                            <hr />
-                            <StockBox stock={stock} />
-                        </div>
-                    );
-                })
-            }
+            <div className='collectionsTitle'>
+                <h2>Collections</h2>
+                <span>A quick view of your assets</span>
+            </div>
+            <div className='stockList'>
+                {currentUser.stocks &&
+                    currentUser.stocks.map((stock, index) => {
+                        return (
+                            <div className='stockTable'>
+                                {index !== 0 &&
+                                    <hr />
+                                }
+                                <StockBox stock={stock} />
+                            </div>
+                        );
+                    })
+                }
+            </div>
         </div>
     );
 }

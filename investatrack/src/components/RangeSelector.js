@@ -7,7 +7,17 @@ const RangeSelector = ({ range, setRange }) => {
     let tempRange = new Date(today.toISOString());
 
     function updateRange(label, days) {
-        tempRange.setDate(today.getDate() - days);
+        if (label === 'YTD') {
+            tempRange.setMonth(0);
+            tempRange.setDate(1);
+
+        } else if (label === 'MTD') {
+            tempRange.setDate(1);
+
+        } else {
+            tempRange.setDate(today.getDate() - days);
+
+        }
         setRange([label, tempRange]);
     }
 
