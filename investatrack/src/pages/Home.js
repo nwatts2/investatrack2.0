@@ -106,7 +106,6 @@ const Home = () => {
                     <StockInfo stock={currentStock ? currentStock : {}}/>
                 </div>
             </div>
-            <h2>Finance News</h2>
             <News />
         </div>
        

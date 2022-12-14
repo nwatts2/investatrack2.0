@@ -7,7 +7,7 @@
     align-self:flex-start;
     width:25%;
     height:auto;
-    max-height:1000px;
+    max-height:1100px;
     padding:15px 5px;
 }
 
@@ -51,6 +51,14 @@
     align-items:center;
 }
 
+.styledLink {
+    width:100%;
+    display:flex;
+    flex-flow: row nowrap;
+    align-items:center;
+    justify-content:center;
+}
+
 .stockTable hr {
     width:10%;
     border:2px solid white;
@@ -67,7 +75,13 @@
     width:85%;
     height:100px;
     padding:10px;
-    overflow:hidden;
+    opacity: 1;
+    transition: all .2s;
+}
+
+.stockBox:hover {
+    opacity: .7;
+    transition: all .2s;
 }
 
 .negativeStock {
@@ -106,6 +120,12 @@
 
 .stockBoxColumn1 {
     align-items:flex-start;
+}
+
+.stockBoxColumn2 {
+    align-items:center;
+    justify-content:center;
+    height:100%;
 }
 
 .stockBoxColumn3 {

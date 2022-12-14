@@ -11,8 +11,6 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
     const colors = ['steelblue', 'orange', 'mediumseagreen', '#ff6961'];
     const hoverHeight = 200;
 
-    const formatDate = d3.timeFormat('%m/%d/%Y');
-    const formatShortDate = d3.timeFormat("%m/%d");
     const formatLongDate = d3.timeFormat("%b %d, %Y");
 
     useEffect(() => {
@@ -26,7 +24,6 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
             tempData.forEach((i) => {
                 if (i.date) {
                     const tempDate = new Date(i.date);
-                    const dateString = formatDate(tempDate)
                     i.date = tempDate;
                 }
                 i.close = Number(i.close);
@@ -42,7 +39,6 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
     
     const margin = {top:0, right:0, bottom:0, left:0};
     const height = 400 - margin.top - margin.bottom, width = 1000 - margin.left - margin.right;
-    const color = 'orange';
 
     const yMin = d3.min(data, (d) => {
         if(d.date > range[1]) {
@@ -179,6 +175,18 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
                     {dataSelect.Low &&
                         <path strokeWidth={3} clipPath='url(#boundingBox)' fill='none' stroke={colors[3]} d={lowPath} style={{ transition: "ease-out .25s" }} />
                     }
+
+                    <rect strokeWidth={0} fill={colors[0]} x={150} y={450} width={30} height={5} rx={2}  />
+                    <text x={190} y={458} fill='#fff' textAnchor='left' >Open</text>
+
+                    <rect strokeWidth={0} fill={colors[1]} x={350} y={450} width={30} height={5} rx={2}  />
+                    <text x={390} y={458} fill='#fff' textAnchor='left' >Close</text>
+
+                    <rect strokeWidth={0} fill={colors[2]} x={550} y={450} width={30} height={5} rx={2}  />
+                    <text x={590} y={458} fill='#fff' textAnchor='left' >High</text>
+
+                    <rect strokeWidth={0} fill={colors[3]} x={750} y={450} width={30} height={5} rx={2}  />
+                    <text x={790} y={458} fill='#fff' textAnchor='left' >Low</text>
 
                     {data.map((item, index) => {
                         return (

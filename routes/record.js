@@ -81,6 +81,26 @@ router.route('/record/recommended/:id').get(async function (req, res) {
     });
 });
 
+router.route('/user/stocks/:id').get(async function (req, res) {
+    let db = await dbo.getDB();
+    let newQuery = {_id: ObjectId(req.params.id)};
+
+    db.collection('users').findOne(newQuery, function (err, result) {
+        const symbols = [];
+        for (let stock of result.stocks) {
+            symbols.push(stock.name);
+        }
+
+        let stockQuery = {name: {'$in': symbols}};
+
+        db.collection('stocks').find(stockQuery).toArray(function (err, result) {
+            if (err) throw err;
+            res.json(result);
+    });
+
+    });
+});
+
 router.route('/user').get(async function (req, res) {
     let db = await dbo.getDB();
     let newQuery = {email: 'coulten.davis23@gmail.com'};
@@ -97,6 +117,8 @@ router.route('/user/exchange').post(async (req, res) => {
     const stockID = req.body.stockID;
     const quantity = Number(req.body.quantity);
     const mode = req.body.mode;
+
+    let heldQuantity = -1;
 
     let db = await dbo.getDB();
     let userQuery = {_id: ObjectId(userID)};
@@ -136,10 +158,16 @@ router.route('/user/exchange').post(async (req, res) => {
                             stock.quantity = Number(stock.quantity) - Number(quantity);
                             stock.pPrice = stockResult.price;
                             stock.pTotal += -1 * totalPrice;
+
+                            heldQuantity = stock.quantity;
                         }
                     }
                     
                 }
+            }
+
+            if (heldQuantity === 0) {
+                stockArray.splice(stockArray.findIndex((thisStock) => {return thisStock.name === stockName}), 1);
             }
         
             if (!needsUpdate && mode === 'BUY') {stockArray.push({

@@ -24,11 +24,11 @@ const ConfirmModal = ({mode, quantityAmount, setInitialized, setFinalized, curre
     );
 }
 
-const BuySell = ({ mode, setMode, currentUser, currentStock }) => {
+const BuySell = ({ mode, setMode, currentUser, currentStock, setRefresh, setNotificationText, setNotificationIsNegative }) => {
     const [initialized, setInitialized] = useState(false);
     const [finalized, setFinalized] = useState(false);
     const [conditionals, setConditionals] = useState({canBuy: false, canSell: false});
-    const [quantityAmount, setQuantityAmount] = useState(0);
+    const [quantityAmount, setQuantityAmount] = useState(-1);
     const [heldQuantity, setHeldQuantity] = useState(0);
     const quantity = useRef(null);
 
@@ -75,7 +75,7 @@ const BuySell = ({ mode, setMode, currentUser, currentStock }) => {
             else if (!updateSell && conditionals.canSell) {setConditionals({...conditionals, canSell: false})}
         }
 
-    }, [currentStock, currentUser, conditionals, quantityAmount]);
+    }, [currentStock, currentUser, conditionals, quantityAmount, finalized]);
 
     async function initializePurchase() {
         if (quantityAmount > 0) {
@@ -97,11 +97,19 @@ const BuySell = ({ mode, setMode, currentUser, currentStock }) => {
             (response) => (response.json())
         ).then((response) => {
             if (response.status === 'success') {
-                window.alert('Successfully sent');
+                setNotificationText('Stock exchange successful');
+                setTimeout(() => {setNotificationText('')}, 5000);
+                setNotificationIsNegative(false);
+                setRefresh((c) => {return c + 1});
+                
             } else if (response.status === 'fail') {
-                window.alert('Failed to send');
+                setNotificationText('Stock exchange failed');
+                setTimeout(() => {setNotificationText('')}, 5000);
+                setNotificationIsNegative(true);
             } else if (response.status === 'insufficient funds') {
-                window.alert('You do not have the funds needed to make this purchase.')
+                setNotificationText('You do not have the funds needed to make this purchase.');
+                setTimeout(() => {setNotificationText('')}, 5000);
+                setNotificationIsNegative(true);
             }
         });
 
@@ -118,7 +126,7 @@ const BuySell = ({ mode, setMode, currentUser, currentStock }) => {
             if (newMode === '' && mode !== newMode) {setMode('')}
             else if (mode !== newMode) {setMode(newMode)}
     
-            if (quantityAmount !== 0) {setQuantityAmount(0)}
+            setQuantityAmount(0);
         }
         
     }
@@ -139,10 +147,42 @@ const BuySell = ({ mode, setMode, currentUser, currentStock }) => {
         }
     }
 
-    function handleBlur() {
-        if (quantity.current && quantity.current.value === '') {
-            quantity.current.value = quantityAmount;
+    function changeQuantity (method) {
+        if (method === 'INCREMENT') {
+            if (mode === 'SELL' && quantityAmount < heldQuantity) {
+                setQuantityAmount((c) => c + 1);
+
+            } else if (mode === 'BUY' && quantityAmount < (currentUser.cMoney / currentStock.price)) {
+                setQuantityAmount((c) => c + 1);
+
+            }
+        } else if (method === 'DECREMENT') {
+            if (quantityAmount > 0) {
+                setQuantityAmount((c) => c - 1);
+            }
         }
+    }
+
+    function handleBlur() {
+        if (quantity.current && currentUser && currentStock) {
+            if (quantity.current.value === '') {
+                quantity.current.value = quantityAmount;
+
+            } else if (isNaN(Number(quantity.current.value))) {
+                quantity.current.value = 0;
+                setQuantityAmount(0);
+
+            } else if (mode === 'SELL' && Number(quantity.current.value) >= heldQuantity) {
+                quantity.current.value = heldQuantity;
+                setQuantityAmount(heldQuantity);
+
+            } else if (mode === 'BUY' && Number(quantity.current.value) >= (currentUser.cMoney / currentStock.price)) {
+                quantity.current.value = Math.floor(currentUser.cMoney / currentStock.price);
+                setQuantityAmount(Math.floor(currentUser.cMoney / currentStock.price));
+
+            }
+        }
+        
     }
 
     function handleSubmit (e) {
@@ -172,18 +212,18 @@ const BuySell = ({ mode, setMode, currentUser, currentStock }) => {
                         <div className='quantity'>
                             <h3 style={{margin:0, textDecoration: 'none'}}>Quantity</h3>
                             <div className='quantityInput'>
-                                <button onClick={() => {setQuantityAmount((c) => {if (c > 0) {return c - 1} else {return c}})}}>{'-'}</button>
+                                <button onClick={() => {changeQuantity('DECREMENT')}}>{'-'}</button>
                                 <input type='text' onChange={updateQuantity} onBlur={handleBlur} ref={quantity} />
-                                <button onClick={() => {setQuantityAmount((c) => {return c + 1})}}>{'+'}</button>
+                                <button onClick={() => {changeQuantity('INCREMENT')}}>{'+'}</button>
 
                             </div>
                         </div>  
                     }
                     {(mode === 'BUY' || mode === '') &&
-                        <button onClick={() => {selectMode('BUY')}} disabled={conditionals.canBuy ? false : true}>BUY{currentStock ? ' ' + currentStock.name : ''}</button>
+                        <button onClick={() => {selectMode('BUY')}} disabled={conditionals.canBuy ? false : true}>BUY{currentStock.name ? ' ' + currentStock.name : ''}</button>
                     }
                     {(mode === 'SELL' || mode === '') &&
-                        <button onClick={() => {selectMode('SELL')}} disabled={conditionals.canSell ? false : true}>SELL{currentStock ? ' ' + currentStock.name : ''}</button>
+                        <button onClick={() => {selectMode('SELL')}} disabled={conditionals.canSell ? false : true}>SELL{currentStock.name ? ' ' + currentStock.name : ''}</button>
                     }
                     {mode !== '' &&
                         <button onClick={() => {selectMode('')}}>CANCEL</button>

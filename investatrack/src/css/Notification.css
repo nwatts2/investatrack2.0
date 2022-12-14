@@ -1,0 +1,48 @@
+.notificationContainer, .notificationContainerNegative {
+    position:fixed;
+    top:41px;
+    right:-50rem;
+    width:20%;
+    height:90px;
+    border-radius:20px 0px 0px 20px;
+    display:flex;
+    flex-flow:row nowrap;
+    align-items:center;
+    justify-content:center;
+    background-color:#142132;
+    overflow:hidden;
+    visibility:hidden;
+}
+
+.notificationContainer span, .notificationContainerNegative span {
+    font-family:'Fugaz One';
+    color:white;
+    font-weight:light;
+    font-size: 1.3rem;
+}
+
+.notificationContainerNegative {
+    background-color:rgba(80, 10, 25, 0.90);
+}
+
+.notificationContainerNegative span {
+    color: rgb(255, 235, 250)
+}
+
+@keyframes moveRight {
+    from {
+        transform: translateX(-50rem);
+    }
+    to {
+        transform: translateX(0rem);
+    }
+}
+
+@keyframes moveLeft {
+    from {
+        transform: translateX(0rem);
+    }
+    to {
+        transform: translateX(-50rem);
+    }
+}

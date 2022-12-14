@@ -1,12 +1,43 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import CollectionsGraph from '../components/CollectionsGraph';
 import '../css/Collections.css';
 
-const StockBox = ({ stock }) => {
-    const [currentStock, setCurrentStock] = useState({});
+const StockBox = ({ currentStock }) => {
+        return (
+            <Link to={`/stocks/${currentStock.name}`} className='styledLink'>
+            <div className={currentStock && currentStock.change ? (currentStock.change > 0 ? 'stockBox positiveStock' : 'stockBox negativeStock') : 'stockBox'}>
+                <div className='stockBoxColumn1'>
+                    <h3>{currentStock ? currentStock.name : ''}</h3>
+                    <span>{currentStock && currentStock.longName ? currentStock.longName : ''}</span>
+                </div>
+                <div className='stockBoxColumn2'>
+                    <CollectionsGraph currentStock={currentStock} />
+                </div>
+                <div className='stockBoxColumn3'>
+                    <h4>{currentStock && currentStock.change ? (currentStock.change > 0 ? "+" + currentStock.change.toLocaleString('en-US', {
+                            style: 'currency',
+                            currency:'USD'
+                        }) : currentStock.change.toLocaleString('en-US', {
+                            style: 'currency',
+                            currency:'USD'
+                        })) : ''}</h4>
+                    <h3>{currentStock && currentStock.price ? currentStock.price.toLocaleString('en-US', {
+                            style: 'currency',
+                            currency:'USD'
+                        }) : 'Unknown'}</h3>
+                </div>
+            </div>
+            </Link>
+        );
+};
+
+const Collections = ({ currentUser }) => {
+    const [stockList, setStockList] = useState([]);
 
     useEffect(() => {
-        async function getStock() {
-            const stockResponse = await fetch(`/record/id/${stock.stockID}`);
+        async function getStocks () {
+            const stockResponse = await fetch(`/user/stocks/${currentUser._id}`);
 
             if (!stockResponse.ok) {
                 const message = `An error occured: ${stockResponse.statusText}`;
@@ -14,47 +45,20 @@ const StockBox = ({ stock }) => {
                 return;
             }
 
-            const stockJSON = await stockResponse.json();
+            const stockJSON = await stockResponse.json();        
 
-            if (JSON.stringify(currentStock) !== JSON.stringify(stockJSON)) {
-                setCurrentStock(stockJSON);
+            if (JSON.stringify(stockJSON) !== JSON.stringify(stockList)) {
+                setStockList(stockJSON);
             }
         }
+        
+        if (currentUser._id) {
+            getStocks();
 
-        if (stock.stockID) {
-            //window.alert(stock.stockID.toString());
-            getStock();
         }
 
-    }, [stock]);
+    }, [JSON.stringify(currentUser)]);
 
-    return (
-        <div className={currentStock && currentStock.change ? (currentStock.change > 0 ? 'stockBox positiveStock' : 'stockBox negativeStock') : 'stockBox'}>
-            <div className='stockBoxColumn1'>
-                <h3>{currentStock ? currentStock.name : ''}</h3>
-                <span>{currentStock && currentStock.longName ? currentStock.longName : ''}</span>
-            </div>
-            <div className='stockBoxColumn2'>
-                <span>Graph</span>
-            </div>
-            <div className='stockBoxColumn3'>
-                <h4>{currentStock && currentStock.change ? (currentStock.change > 0 ? "+" + currentStock.change.toLocaleString('en-US', {
-                        style: 'currency',
-                        currency:'USD'
-                    }) : currentStock.change.toLocaleString('en-US', {
-                        style: 'currency',
-                        currency:'USD'
-                    })) : ''}</h4>
-                <h3>{currentStock && currentStock.price ? currentStock.price.toLocaleString('en-US', {
-                        style: 'currency',
-                        currency:'USD'
-                    }) : 'Unknown'}</h3>
-            </div>
-        </div>
-    );
-};
-
-const Collections = ({ currentUser }) => {
     return (
         <div className='collections'>
             <div className='collectionsTitle'>
@@ -62,14 +66,14 @@ const Collections = ({ currentUser }) => {
                 <span>A quick view of your assets</span>
             </div>
             <div className='stockList'>
-                {currentUser.stocks &&
-                    currentUser.stocks.map((stock, index) => {
+                {stockList.length > 0 &&
+                    stockList.map((stock, index) => {
                         return (
                             <div className='stockTable'>
                                 {index !== 0 &&
                                     <hr />
                                 }
-                                <StockBox stock={stock} />
+                                <StockBox currentStock={stock} />
                             </div>
                         );
                     })
@@ -80,11 +84,3 @@ const Collections = ({ currentUser }) => {
 }
 
 export default Collections;
-
-/*
-63890ae0f55e7d65a1cb0f9d
-63890eb5f55e7d65a1d5485d
-638911fcf55e7d65a1ddf64e
-63890c63f55e7d65a1cf2eb0
-6389101ef55e7d65a1d92115
-*/

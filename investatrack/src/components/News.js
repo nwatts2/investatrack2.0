@@ -72,11 +72,16 @@ const News = () => {
 
     return (
         <div className='newsMain'>
-            {news.articles ? news.articles.map((article) => {
-                return (
-                    <ArticleBox article={article}/>
-                );
-            }) : ''}
+            <hr style={{marginTop: '20px'}} />
+            <h2>Finance News</h2>
+            <hr />
+            <div className='newsArticles'>
+                {news.articles ? news.articles.map((article) => {
+                    return (
+                        <ArticleBox article={article}/>
+                    );
+                }) : ''}
+            </div>
         </div>
     );
 };

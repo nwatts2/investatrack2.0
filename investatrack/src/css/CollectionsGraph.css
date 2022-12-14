@@ -1,0 +1,19 @@
+.collectionsGraphSection {
+    border-radius:5px;
+    width:100%;
+    margin:0px;
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:center;
+    align-items:center;
+}
+
+.collectionsGraphSection svg {
+    overflow:visible;
+    position:relative;
+}
+
+.collectionsGraphSection .axis .domain,
+.collectionsGraphSection .axis.xAxis line {
+    display:none;
+}

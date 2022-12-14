@@ -41,7 +41,6 @@ const Browse = () => {
             </div>
             <h2>Categories</h2>
             <Categories />
-            <h2>Finance News</h2>
             <News />
         </div>
     );

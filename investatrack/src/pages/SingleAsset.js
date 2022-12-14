@@ -6,11 +6,15 @@ import DataSelector from '../components/DataSelector';
 import Graph from '../components/Graph';
 import StockInfo from '../components/StockInfo';
 import BuySell from '../components/BuySell';
+import Notification from '../components/Notification';
 
 const SingleAsset = () => {
     const [stock, setStock] = useState({});
     const [currentUser, setCurrentUser] = useState({});
     const [mode, setMode] = useState('');
+    const [notificationText, setNotificationText] = useState('');
+    const [notificationIsNegative, setNotificationIsNegative] = useState(false);
+    const [refresh, setRefresh] = useState(0);
     const navigate = useNavigate();
 
     const today = new Date();
@@ -23,7 +27,7 @@ const SingleAsset = () => {
         getStock();
         getUser();
 
-    }, [navigate]);
+    }, [navigate, refresh]);
 
     async function getUser() {
         const userResponse = await fetch('/user/');
@@ -91,9 +95,10 @@ const SingleAsset = () => {
                         <Graph currentStock={stock} range={range} dataSelect={dataSelect} />
                     </div>
                 </div>
-                <BuySell mode={mode} setMode={setMode} currentStock={stock} currentUser={currentUser} />
+                <BuySell setRefresh={setRefresh} setNotificationText={setNotificationText} setNotificationIsNegative={setNotificationIsNegative} mode={mode} setMode={setMode} currentStock={stock} currentUser={currentUser} />
             </div>
             <StockInfo stock={stock}/>
+            <Notification text={notificationText} isNegative={notificationIsNegative} />
         </div>
     );
 }
