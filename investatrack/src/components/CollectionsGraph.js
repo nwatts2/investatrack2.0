@@ -101,8 +101,6 @@ const Chart = ({ currentStock }) => {
 }
 
 const CollectionsGraph = ({ currentStock }) => {
-
-
     return (
         <div className='collectionsGraphSection'>
             <Chart currentStock={currentStock} />

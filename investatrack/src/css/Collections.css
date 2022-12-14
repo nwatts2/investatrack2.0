@@ -7,7 +7,7 @@
     align-self:flex-start;
     width:25%;
     height:auto;
-    max-height:1100px;
+    max-height:1150px;
     padding:15px 5px;
 }
 
@@ -40,6 +40,51 @@
     align-items:center;
     overflow-y:auto;
     background: radial-gradient(ellipse, #142132 40%, transparent 70%);
+    direction: rtl;
+
+    --scrollbar-width: 8px;
+    --mask-height: 30px;
+    padding:var(--mask-height) 0px;
+
+    --mask-image-content: linear-gradient(
+        to bottom,
+        transparent,
+        black var(--mask-height),
+        black calc(100% - var(--mask-height)),
+        transparent
+    );
+    --mask-size-content: calc(100% - var(--scrollbar-width)) 100%;
+    --mask-image-scrollbar: linear-gradient(black, black);
+    --mask-size-scrollbar: var(--scrollbar-width) 100%;
+
+    mask-image: var(--mask-image-scrollbar), var(--mask-image-content);
+    mask-size: var(--mask-size-scrollbar), var(--mask-size-content);
+
+    mask-position: 0 0, 100% 0;
+    mask-repeat: no-repeat, no-repeat;
+
+    scrollbar-width:thin;
+    scrollbar-color: rgba(255, 255, 255, 0) transparent;
+    transition: all .2s;
+}
+
+.stockList:hover {
+    scrollbar-color: rgba(255, 255, 255, .3) transparent;
+    transition: all .2s;
+}
+
+.collections::-webkit-scrollbar-track {
+    background:transparent;
+}
+
+.collections::-webkit-scrollbar-track-piece:end {
+    background:transparent;
+    margin-bottom:200px;
+}
+
+.collections::-webkit-scrollbar-track-piece:start {
+    background:transparent;
+    margin-top:200px;
 }
 
 .stockTable {
@@ -49,6 +94,7 @@
     flex-flow:column nowrap;
     justify-content:flex-start;
     align-items:center;
+    direction:ltr;
 }
 
 .styledLink {
@@ -75,13 +121,12 @@
     width:85%;
     height:100px;
     padding:10px;
-    opacity: 1;
-    transition: all .2s;
+    transition: all .1s;
 }
 
 .stockBox:hover {
-    opacity: .7;
-    transition: all .2s;
+    transform: scale(1.1);
+    transition: all .1s;
 }
 
 .negativeStock {
@@ -107,6 +152,13 @@
 .stockBox span {
     font-size:1rem;
     margin:0;
+    text-align:left;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
 
 .stockBoxColumn1, .stockBoxColumn2, .stockBoxColumn3 {

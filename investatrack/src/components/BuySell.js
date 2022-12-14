@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../css/BuySell.css';
 
 const ConfirmModal = ({mode, quantityAmount, setInitialized, setFinalized, currentStock}) => {
@@ -31,13 +32,14 @@ const BuySell = ({ mode, setMode, currentUser, currentStock, setRefresh, setNoti
     const [quantityAmount, setQuantityAmount] = useState(-1);
     const [heldQuantity, setHeldQuantity] = useState(0);
     const quantity = useRef(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (quantity.current) {
             quantity.current.value = quantityAmount;
         }
 
-    }, [quantityAmount, quantity.current])
+    }, [quantityAmount, quantity.current, navigate])
 
     useEffect(() => {
         if (finalized) {
