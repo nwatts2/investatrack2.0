@@ -6,6 +6,12 @@
     align-items:center;
 }
 
+.newsMain h2 {
+    font-family: 'Fugaz One';
+    font-size: 3rem;
+    margin:0;
+}
+
 .newsMain hr {
     border:3px solid white;
     border-radius:9999px;

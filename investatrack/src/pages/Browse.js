@@ -34,12 +34,13 @@ const Browse = () => {
         <div className='mainPage'>
             <Search />
             <TypeMenu />
-            <h1>Browse - Trending Stocks</h1>
+            <div className='titleSection'>
+                <h1>BROWSE STOCKS</h1>
+            </div>
             <div className='row'>
                 <Popular />
                 <Recommended currentUser={currentUser ? currentUser : {}} />
             </div>
-            <h2>Categories</h2>
             <Categories />
             <News />
         </div>

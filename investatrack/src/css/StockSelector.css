@@ -21,8 +21,9 @@
     overflow-x:auto;
     width:100%;
 
+    --scrollbar-width: 12px;
     --mask-height: 30px;
-    padding:0px var(--mask-height);
+    padding:0px var(--mask-height) 5px var(--mask-height);
 
     --mask-image-content: linear-gradient(
         to right,
@@ -38,6 +39,17 @@
 
     mask-position: 0 0, 100% 0;
     mask-repeat: no-repeat, no-repeat;
+
+    scrollbar-width:thin;
+    scrollbar-color:transparent transparent;
+
+    transition: all .5s .1s;
+}
+
+.stockSelector:hover {
+    scrollbar-width:thin;
+    scrollbar-color:rgba(255, 255, 255, 0.3) transparent;
+    transition: all .5s .1s;
 }
 
 .stockSelector button {

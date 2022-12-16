@@ -4,7 +4,7 @@ import '../css/Popular.css';
 
 const PopularEntry = ( {stock} ) => {
     return (
-        <Link to={`/stocks/${stock.name}`}>
+        <Link className='popularLink' to={`/stocks/${stock.name}`}>
         <div className='popularEntry'>
             <div className='popularEntryColLeft'>
                 <h2>{stock.name}</h2>
@@ -33,7 +33,7 @@ const Popular = () => {
 
     useEffect(() => {
         async function getTrending () {
-            const stockResponse = await fetch(`/record/trending`);
+            const stockResponse = await fetch(`/trending`);
 
             if (!stockResponse.ok) {
                 const message = `An error occured: ${stockResponse.statusText}`;
@@ -41,7 +41,26 @@ const Popular = () => {
                 return;
             }
 
-            const stockJSON = await stockResponse.json();        
+            const stockJSON = await stockResponse.json();
+            
+            let i = 0;
+            let length = stockJSON.length;
+
+            while (i < length) {
+                let j = 0;
+
+                while(j < length) {
+                    if (Math.abs(stockJSON[j].changePercent) > Math.abs(stockJSON[i].changePercent) && i < j) {
+                        const tempObj = stockJSON[i];
+                        stockJSON[i] = stockJSON[j];
+                        stockJSON[j] = tempObj;
+                    }
+
+                    j++;
+                }
+
+                i++;
+            }
 
             if (JSON.stringify(stockJSON) !== JSON.stringify(stockList)) {
                 setStockList(stockJSON);
@@ -54,7 +73,10 @@ const Popular = () => {
 
     return (
         <div className='popular'>
-            <h2>Most Popular</h2>
+            <div className='popularListTitle'>
+                <h2>Most Popular</h2>
+                <span>See the latest trending stocks</span>
+            </div>
             <div className='popularList'>
                 <div className='leftCol'>
                     {stockList.length > 0 ? stockList.map((stock, index) => {

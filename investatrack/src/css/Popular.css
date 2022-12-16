@@ -8,34 +8,70 @@
     align-items:center;
 }
 
-.popular h2 {
+.popularListTitle {
+    width:100%;
+    position:relative;
+    display:flex;
+    flex-flow:row nowrap;
+    justify-content:flex-start;
+    align-items:center;
+    padding:30px;
+    border:3px solid white;
+    border-radius:10px 50px 10px 50px;
+    background-color: #142132;
+    box-shadow: 0px 0px 5px mediumseagreen;
+}
+
+.popularListTitle h2 {
     text-decoration: underline;
+    text-align:center;
+    font-family:'Fugaz One';
+    font-size:3rem;
+    width:50%;
+    background-color:#1b3046;
+    line-height:25px;
+    border-radius:10px 20px 10px 20px;
+}
+
+.popularListTitle span {
+    width:50%;
+    text-align:right;
+    align-self:flex-end;
+    font-family: 'Fugaz One';
+    font-size:1.4rem;
+    position:absolute;
+    right:10px;
+    bottom:5px;
 }
 
 .popularList {
     display:flex;
     flex-flow:row nowrap;
-    justify-content:center;
-    align-items:center;
-    margin: 10px 0px 0px 0px;
-    width:100%;
+    justify-content:space-around;
+    align-items:space-around;
+    margin: 0px;
+    width:90%;
+    background:linear-gradient(to bottom, #142132, transparent);
+    border-radius: 0px 0px 20px 20px;
+    border-left:2px solid #2e4766;
+    border-right:2px solid #2e4766;
+
 }
 
 .popularList h2 {
     text-decoration: none;
 }
 
-.popularList.leftCall, .popularList.leftCall {
+.leftCol, .rightCol {
     display:flex;
     flex-flow:column nowrap;
     justify-content:center;
     align-items:center;
-    width:50%;
-    height:100%;
+    width:48%;
 }
 
-.popularList.leftCall {
-    border-left: 2px solid white;
+.popularLink {
+    width:100%;
 }
 
 .popularEntry {
@@ -43,15 +79,20 @@
     flex-flow:row nowrap;
     justify-content:space-between;
     align-items:center;
-    margin:10px 5px;
+    margin:8px 0px;
     border-radius:20px;
     padding: 10px 10px;
     background-color:#142132;
+    border:2px solid white;
+    width:100%;
+
+    transition: all .2s;
 
 }
 
 .popularEntry:hover {
-    opacity:0.7;
+    border:2px solid mediumseagreen;
+    transition: all .2s;
 }
 
 .popularEntry h2 {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import CollectionsGraph from '../components/CollectionsGraph';
 import '../css/Recommended.css';
 
 const RecommendedEntry = ({ stock }) => {
@@ -9,6 +10,9 @@ const RecommendedEntry = ({ stock }) => {
             <div className='recommendedEntryColLeft'>
                 <h2>{stock.name}</h2>
                 <h3>{stock.longName}</h3>
+            </div>
+            <div className='recommendedEntryColMiddle'>
+                <CollectionsGraph currentStock={stock} />
             </div>
             <div className='recommendedEntryColRight'>
                 <h3 className={stock.change ? (stock.change > 0 ? 'positiveEntry' : 'negativeEntry') : ''}>{stock.change ? (stock.change > 0 ? "+" + stock.change.toLocaleString('en-US', {
@@ -33,7 +37,7 @@ const Recommended = ({ currentUser }) => {
 
     useEffect(() => {
         async function getRecommended () {
-            const stockResponse = await fetch(`/record/recommended/${currentUser._id}`);
+            const stockResponse = await fetch(`/user/recommended/${currentUser._id}`);
 
             if (!stockResponse.ok) {
                 const message = `An error occured: ${stockResponse.statusText}`;
@@ -47,7 +51,6 @@ const Recommended = ({ currentUser }) => {
                 setStockList(stockJSON);
             }
         }
-
         
         if (currentUser._id) {
             getRecommended();
@@ -57,9 +60,12 @@ const Recommended = ({ currentUser }) => {
 
     return (
         <div className='recommended'>
-            <h2>Recommended Stocks</h2>
+            <div className='recommendedTitle'>
+                <h2>Stocks For You</h2>
+                <span>Some stocks you might like</span>
+            </div>
             {stockList.length > 0 ? stockList.map((stock) => {
-                <RecommendedEntry stock={stock} />
+                return (<RecommendedEntry stock={stock} />);
             }) : ''}
         </div>
     );

@@ -46,7 +46,7 @@ router.route('/record/name/:name').get(async function (req, res) {
     });
 });
 
-router.route('/record/trending').get(async function (req, res) {
+router.route('/trending').get(async function (req, res) {
     let db = await dbo.getDB();
     let newQuery = {name: 'trending'};
 
@@ -61,7 +61,7 @@ router.route('/record/trending').get(async function (req, res) {
     });
 });
 
-router.route('/record/recommended/:id').get(async function (req, res) {
+router.route('/user/recommended/:id').get(async function (req, res) {
     let db = await dbo.getDB();
     let newQuery = {_id: ObjectId(req.params.id)};
 

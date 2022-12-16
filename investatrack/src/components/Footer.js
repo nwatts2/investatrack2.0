@@ -8,7 +8,7 @@ const Footer = () => {
 
     useEffect(() => {
         async function getTrending () {
-            const stockResponse = await fetch(`/record/trending`);
+            const stockResponse = await fetch(`/trending`);
 
             if (!stockResponse.ok) {
                 const message = `An error occured: ${stockResponse.statusText}`;
