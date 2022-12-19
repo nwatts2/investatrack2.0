@@ -81,6 +81,16 @@ router.route('/user/recommended/:id').get(async function (req, res) {
     });
 });
 
+router.route('/stocks/sector/:sector/:limit').get(async function (req, res) {
+    let db = await dbo.getDB();
+    let newQuery = {sector: req.params.sector};
+
+    db.collection('stocks').find(newQuery).sort({price: -1}).limit(Number(req.params.limit)).toArray(function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+
 router.route('/user/stocks/:id').get(async function (req, res) {
     let db = await dbo.getDB();
     let newQuery = {_id: ObjectId(req.params.id)};

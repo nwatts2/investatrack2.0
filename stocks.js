@@ -18,13 +18,21 @@ const queryStocks = async () => {
     }
 }
 
-const history = async (query, startDate, endDate, interval) => {
-    let chartResult, summaryResult;
+const history = async (query, startFull, startWeek, startDay, endDate, interval) => {
+    let chartResultFull, chartResultWeek, chartResultDay, summaryResult;
 
     try{
-        chartResult = await yahooFinance._chart(query, {period1: startDate, period2: endDate, interval: interval});
+        chartResultFull = await yahooFinance._chart(query, {period1: startFull, period2: endDate, interval: interval});
         summaryResult = await yahooFinance.quoteSummary(query, {modules: ['price']});
-        updateDB(chartResult, summaryResult);
+
+        try {
+            chartResultWeek = await yahooFinance._chart(query, {period1: startWeek, period2: startDay, interval: '1h'});
+            chartResultDay = await yahooFinance._chart(query, {period1: startDay, period2: endDate, interval: '15m'});
+        } catch {
+
+        }
+        
+        updateDB(chartResultFull, chartResultWeek, chartResultDay, summaryResult);
 
     }
     catch{
@@ -32,7 +40,7 @@ const history = async (query, startDate, endDate, interval) => {
         if (!blacklist.includes(query)) {blacklist.push(query);}
     }
     finally{
-        return [chartResult, summaryResult];
+        return [chartResultFull, summaryResult];
     }
 }
 
@@ -124,15 +132,29 @@ const getRecommended = async () => {
     });
 }
 
-const updateDB = async function (chartResult, summaryResult) {
+const updateDB = async function (chartResultFull, chartResultWeek, chartResultDay, summaryResult) {
     let db = await dbo.getDB();
-    let newQuery = {name: chartResult.meta.symbol};
+    let newQuery = {name: chartResultFull.meta.symbol};
+    let recentHistory = [];
+
+    if (chartResultWeek && chartResultWeek.quotes) {
+        for (let x of chartResultWeek.quotes) {
+            recentHistory.push({date: x.date, volume: x.volume, price: x.close});
+        }
+    }
+
+    if (chartResultDay && chartResultDay.quotes) {
+        for (let x of chartResultDay.quotes) {
+            recentHistory.push({date: x.date, volume: x.volume, price: x.close});
+        }
+    }
 
     let newValues = {$set: 
         {
             longName: summaryResult.price.longName, 
-            currency: chartResult.meta.currency, 
-            history: chartResult.quotes,
+            currency: chartResultFull.meta.currency, 
+            history: chartResultFull.quotes,
+            recentHistory: recentHistory,
             change: summaryResult.price.regularMarketChange,
             changePercent: summaryResult.price.regularMarketChangePercent,
             price: summaryResult.price.regularMarketPrice,
@@ -143,7 +165,7 @@ const updateDB = async function (chartResult, summaryResult) {
 
     db.collection('stocks').updateOne(newQuery, newValues, {upsert: true}, function (err, res) {
         if (err) throw err;
-        console.log(`${summaryResult.price.longName} (${chartResult.meta.symbol}) Info Updated`);
+        console.log(`${summaryResult.price.longName} (${chartResultFull.meta.symbol}) Info Updated`);
     });
 }
 
@@ -183,13 +205,17 @@ const updateBlacklist = async function () {
 
 const main = async function () {
     const today = new Date();
-    today.setHours(0,0,0,0);
-
     const endDate = today.toISOString();
 
-    today.setFullYear(today.getFullYear() - 2);
+    today.setHours(0,0,0,0);
+    const fullDate = new Date(today.toUTCString()), weekDate = new Date(today.toUTCString());
 
-    const startDate = today.toISOString(), interval = '1d';
+    fullDate.setFullYear(today.getFullYear() - 2);
+    weekDate.setDate(today.getDate() - 5);
+
+    const startFull = fullDate.toISOString(), interval = '1d';
+    const startWeek = weekDate.toISOString();
+    const startDay = today.toISOString();
 
     const start = Date.now();
 
@@ -198,18 +224,14 @@ const main = async function () {
 
     const blacklist = await getBlacklist();
 
-    //console.log(blacklist.length);
-
     for (let symbol of symbols) {
         if (!blacklist.includes(symbol)) {
             whitelistSymbols.push(symbol);
         }        
     }
 
-    //console.log(whitelistSymbols.length);
-
     for (let symbol of whitelistSymbols) {
-        const temp = await history(symbol, startDate, endDate, interval);
+        const temp = await history(symbol, startFull, startWeek, startDay, endDate, interval);
     }
 
     const end = Date.now();

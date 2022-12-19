@@ -31,3 +31,11 @@
 .dataSelector .selected {
     background-color: mediumseagreen;
 }
+
+.dataSelector button:disabled {
+    opacity: .5;
+}
+
+.dataSelector button:disabled:hover {
+    border: 3px solid white;
+}

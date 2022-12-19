@@ -49,8 +49,14 @@
     mask-repeat: no-repeat, no-repeat;
 
     scrollbar-width:thin;
-    scrollbar-color:white transparent;
+    scrollbar-color:transparent transparent;
+    transition: all .5s .1s;
 
+}
+
+.newsArticles:hover {
+    scrollbar-color:rgba(255,255,255,0.3) transparent;
+    transition:all .5s .1s;
 }
 
 .newsMain::-webkit-scrollbar {

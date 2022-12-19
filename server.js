@@ -10,6 +10,7 @@ const dbo = require('./conn');
 const path = require('path');
 const pullNews = require('./pullNews');
 const stocks = require('./stocks');
+const users = require('./users');
 
 app.use(cors());
 app.use(express.json());
@@ -27,6 +28,8 @@ app.listen(process.env.PORT || 3001, () => {
         //stocks.main();
         stocks.getTrending();
         stocks.getRecommended();
+
+        //users.main();
 
         //pullNews.getNews();
 

@@ -4,21 +4,41 @@ import * as d3 from 'd3';
 const LineChart = ({ currentStock, range, dataSelect }) => {
     const [activeIndex, setActiveIndex] = useState(null);
     const [data, setData] = useState([]);
+    const [recentData, setRecentData] = useState([]);
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const colors = ['steelblue', 'orange', 'mediumseagreen', '#ff6961'];
+    const colors = ['steelblue', 'orange', 'mediumseagreen', '#ff6961', 'rgb(211, 113, 211)'];
     const hoverHeight = 200;
 
     const formatLongDate = d3.timeFormat("%b %d, %Y");
 
     useEffect(() => {
         const tempData = [];
+        const tempRecentData = [];
 
         if (currentStock && currentStock.history) {
             for (let x of currentStock.history) {
                 tempData.push(x);
+            }
+
+            if (currentStock.recentHistory) {
+                for (let x of currentStock.recentHistory) {
+                    tempRecentData.push(x);
+                }
+
+                tempRecentData.forEach((i) => {
+                    if (i.date) {
+                        const tempDate = new Date(i.date);
+                        i.date = tempDate;
+                    }
+                    i.price = Number(i.price);
+                });
+            
+                if (JSON.stringify(recentData) !== JSON.stringify(tempRecentData)) {
+                    setRecentData(tempRecentData);
+                }
             }
 
             tempData.forEach((i) => {
@@ -40,34 +60,100 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
     const margin = {top:0, right:0, bottom:0, left:0};
     const height = 400 - margin.top - margin.bottom, width = 1000 - margin.left - margin.right;
 
-    const yMin = d3.min(data, (d) => {
-        if(d.date > range[1]) {
-            const dataArray = [];
+    let yMin, yMax, getX, getY;
 
-            if (dataSelect.Open) {dataArray.push(d.open)}
-            if (dataSelect.Close) {dataArray.push(d.close)}
-            if (dataSelect.High) {dataArray.push(d.high)}
-            if (dataSelect.Low) {dataArray.push(d.low)}
+    if (range[0] !== '5d' && range[0] !== '1d') {
+        yMin = d3.min(data, (d) => {
+            if(d.date > range[1]) {
+                const dataArray = [];
+    
+                if (dataSelect.Open) {dataArray.push(d.open)}
+                if (dataSelect.Close) {dataArray.push(d.close)}
+                if (dataSelect.High) {dataArray.push(d.high)}
+                if (dataSelect.Low) {dataArray.push(d.low)}
+    
+                return Math.min(...dataArray);
+            }
+        });
+    
+        yMax = d3.max(data, (d) => {
+            if(d.date > range[1]) {
+                const dataArray = [];
+    
+                if (dataSelect.Open) {dataArray.push(d.open)}
+                if (dataSelect.Close) {dataArray.push(d.close)}
+                if (dataSelect.High) {dataArray.push(d.high)}
+                if (dataSelect.Low) {dataArray.push(d.low)}
+    
+                return Math.max(...dataArray);
+            }
+        });
 
-            return Math.min(...dataArray);
-        }
-    });
+        getX = d3.scaleTime().domain(d3.extent(data, (d) => {if(d.date > range[1]) {return d.date}})).range([0, width]);
+        getY = d3.scaleLinear().domain([yMin - (.1 * (yMax - yMin)), yMax + (.1 * (yMax - yMin))]).range([height, 0]);
 
-    const yMax = d3.max(data, (d) => {
-        if(d.date > range[1]) {
-            const dataArray = [];
+    } else if (range[0] === '5d' ){
+        yMin =  Math.min(d3.min(data, (d) => {
+            if(d.date > range[1]) {
+                const dataArray = [];
+    
+                if (dataSelect.Open) {dataArray.push(d.open)}
+                if (dataSelect.Close) {dataArray.push(d.close)}
+                if (dataSelect.High) {dataArray.push(d.high)}
+                if (dataSelect.Low) {dataArray.push(d.low)}
+    
+                if (dataSelect.Open || dataSelect.Close || dataSelect.High || dataSelect.Low) {
+                    return Math.min(...dataArray);
+                } else {
+                    return Infinity;
+                }
+                        }
+        }), d3.min(recentData, (d) => {
+            if(d.date > range[1]) {
+                return d.price;
+            }
+        }));
 
-            if (dataSelect.Open) {dataArray.push(d.open)}
-            if (dataSelect.Close) {dataArray.push(d.close)}
-            if (dataSelect.High) {dataArray.push(d.high)}
-            if (dataSelect.Low) {dataArray.push(d.low)}
+        yMax = Math.max(d3.max(data, (d) => {
+            if(d.date > range[1]) {
+                const dataArray = [];
+    
+                if (dataSelect.Open) {dataArray.push(d.open)}
+                if (dataSelect.Close) {dataArray.push(d.close)}
+                if (dataSelect.High) {dataArray.push(d.high)}
+                if (dataSelect.Low) {dataArray.push(d.low)}
+    
+                if (dataSelect.Open || dataSelect.Close || dataSelect.High || dataSelect.Low) {
+                    return Math.max(...dataArray);
+                } else {
+                    return 0;
+                }
+            }
+        }), d3.max(recentData, (d) => {
+            if (d.date > range[1]) {
+                return d.price;
+            }
+        }));
 
-            return Math.max(...dataArray);
-        }
-    });
+        getX = d3.scaleTime().domain(d3.extent(data.concat(recentData), (d) => {if(d.date > range[1]) {return d.date}})).range([0, width]);
+        getY = d3.scaleLinear().domain([yMin - (.1 * (yMax - yMin)), yMax + (.1 * (yMax - yMin))]).range([height, 0]);
 
-    const getX = d3.scaleTime().domain(d3.extent(data, (d) => {if(d.date > range[1]) {return d.date}})).range([0, width]);
-    const getY = d3.scaleLinear().domain([yMin - (.1 * (yMax - yMin)), yMax + (.1 * (yMax - yMin))]).range([height, 0]);
+    } else if (range[0] === '1d' ){
+        yMin =  d3.min(recentData, (d) => {
+            if(d.date > range[1]) {
+                return d.price;
+            }
+        });
+
+        yMax = d3.max(recentData, (d) => {
+            if (d.date > range[1]) {
+                return d.price;
+            }
+        });
+
+        getX = d3.scaleTime().domain(d3.extent(recentData, (d) => {if(d.date > range[1]) {return d.date}})).range([0, width]);
+        getY = d3.scaleLinear().domain([yMin - (.1 * (yMax - yMin)), yMax + (.1 * (yMax - yMin))]).range([height, 0]);
+    }
 
     const getXAxis = (ref) => {
         let tickText = '';
@@ -120,6 +206,13 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
                         //.defined(((d) => d.date > range[1]))
                         .curve(d3.curveMonotoneX)(data);
 
+    const pricePath = d3
+                        .line()
+                        .x((d) => getX(d.date))
+                        .y((d) => getY(d.price))
+                        //.defined(((d) => d.date > range[1]))
+                        .curve(d3.curveMonotoneX)(recentData);
+
     const areaPath = d3
                         .area()
                         .x((d) => getX(d.date))
@@ -131,7 +224,7 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
     const handleMouseMove = (e) => {
         const bisect = d3.bisector((d) => d.date).left;
         const x0 = getX.invert(d3.pointer(e, this)[0])
-        const index = bisect(data, x0, 1);
+        const index = bisect((range[0] === '5d' || range[0] === '1d') ? recentData : data, x0, 1);
         setActiveIndex(index);
     }
 
@@ -160,33 +253,40 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
                     {//<path fill={color} d={areaPath} clipPath='url(#boundingBox)' opacity={0.3} style={{ transition: "ease-out .25s" }} />
                     }
 
-                    {dataSelect.Open &&
+                    {(range[0] !== '1d' && dataSelect.Open) &&
                         <path strokeWidth={3} clipPath='url(#boundingBox)' fill='none' stroke={colors[0]} d={openPath} style={{ transition: "ease-out .25s" }} />
                     }
 
-                    {dataSelect.Close &&
+                    {(range[0] !== '1d' && dataSelect.Close) &&
                     <path strokeWidth={3} clipPath='url(#boundingBox)' fill='none' stroke={colors[1]} d={closePath} style={{ transition: "ease-out .25s" }} />
                     }
 
-                    {dataSelect.High &&
+                    {(range[0] !== '1d' && dataSelect.High) &&
                         <path strokeWidth={3} clipPath='url(#boundingBox)' fill='none' stroke={colors[2]} d={highPath} style={{ transition: "ease-out .25s" }} />
                     }
 
-                    {dataSelect.Low &&
+                    {(range[0] !== '1d' && dataSelect.Low) &&
                         <path strokeWidth={3} clipPath='url(#boundingBox)' fill='none' stroke={colors[3]} d={lowPath} style={{ transition: "ease-out .25s" }} />
                     }
 
-                    <rect strokeWidth={0} fill={colors[0]} x={150} y={450} width={30} height={5} rx={2}  />
-                    <text x={190} y={458} fill='#fff' textAnchor='left' >Open</text>
+                    {((range[0] === '5d' || range[0] === '1d') && dataSelect.Price) &&
+                        <path strokeWidth={3} clipPath='url(#boundingBox)' fill='none' stroke={colors[4]} d={pricePath} style={{ transition: "ease-out .25s" }} />
+                    }
 
-                    <rect strokeWidth={0} fill={colors[1]} x={350} y={450} width={30} height={5} rx={2}  />
-                    <text x={390} y={458} fill='#fff' textAnchor='left' >Close</text>
+                    <rect strokeWidth={0} fill={colors[0]} x={60} y={450} width={30} height={5} rx={2}  />
+                    <text x={100} y={458} fill='#fff' textAnchor='left' >Open</text>
 
-                    <rect strokeWidth={0} fill={colors[2]} x={550} y={450} width={30} height={5} rx={2}  />
-                    <text x={590} y={458} fill='#fff' textAnchor='left' >High</text>
+                    <rect strokeWidth={0} fill={colors[1]} x={260} y={450} width={30} height={5} rx={2}  />
+                    <text x={300} y={458} fill='#fff' textAnchor='left' >Close</text>
 
-                    <rect strokeWidth={0} fill={colors[3]} x={750} y={450} width={30} height={5} rx={2}  />
-                    <text x={790} y={458} fill='#fff' textAnchor='left' >Low</text>
+                    <rect strokeWidth={0} fill={colors[2]} x={460} y={450} width={30} height={5} rx={2}  />
+                    <text x={500} y={458} fill='#fff' textAnchor='left' >High</text>
+
+                    <rect strokeWidth={0} fill={colors[3]} x={660} y={450} width={30} height={5} rx={2}  />
+                    <text x={700} y={458} fill='#fff' textAnchor='left' >Low</text>
+
+                    <rect strokeWidth={0} fill={colors[4]} x={860} y={450} width={30} height={5} rx={2}  />
+                    <text x={900} y={458} fill='#fff' textAnchor='left' >Price</text>
 
                     {data.map((item, index) => {
                         return (
