@@ -1,0 +1,92 @@
+.modalSearchBox {
+    width:100%;
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+    margin:10px 0px;
+}
+
+.modalSearchBox input {
+    border:3px solid white;
+    border-radius:5px;
+    padding: 5px 10px;
+    margin:10px 0px;
+    background-color:#1b3046;
+    color:white;
+    width:80%;
+    box-shadow: 4px 4px 5px #242425;
+    font-family:'Trebuchet MS';
+    font-size:1rem;
+    z-index:2;
+}
+
+.modalSearchResultsBox {
+    position: absolute;
+    top:30px;
+    width:75%;
+    max-height:300px;
+    padding:20px 10px 10px 10px;
+    border:2px solid white;
+    border-radius:0px 0px 20px 20px;
+    background-color:#142132;
+    z-index:1;
+    overflow:auto;
+}
+
+.modalSearchResultsBox hr {
+    border: 2px solid #182a3f;
+    width:75%;
+}
+
+.modalSearchResult {
+    display:flex;
+    flex-flow:row nowrap;
+    justify-content:space-between;
+    align-items:center;
+    margin:10px 0px;
+    border-radius:20px;
+    padding: 10px 10px;
+}
+
+.modalSearchResult:hover {
+    opacity:0.7;
+}
+
+.modalSearchResult h2 {
+    font-size:1.3rem;
+    margin:0px;
+}
+
+.modalSearchResult h3 {
+    font-size:1rem;
+    margin:0px;
+    font-weight:light;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.negativeSearch {color:red;}
+.positiveSearch {color:green;}
+
+.modalSearchResultColLeft, .modalSearchResultColRight {
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:center;
+}
+
+.modalSearchResultColLeft {
+    align-items:flex-start;
+    width:60%;
+    text-align:left;
+}
+.modalSearchResultColRight {
+    align-items:flex-end;
+    width:40%;
+    text-align:right;
+}

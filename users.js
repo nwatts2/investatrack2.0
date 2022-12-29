@@ -22,6 +22,12 @@ async function updateUserHistory() {
                 let index = historyArray.findIndex((thisEntry) => {return JSON.stringify(thisEntry.date) === JSON.stringify(today)});
                 let history;
 
+                let listsArray = user.lists || [];
+
+                for (let list of listsArray) {
+                    
+                }
+
                 if (index >= 0) {
                     history = historyArray[index];
                 } else {

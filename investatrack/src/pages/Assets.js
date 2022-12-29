@@ -10,6 +10,16 @@ const Assets = () => {
     const [currentUser, setCurrentUser] = useState({});
     const [currentStock, setCurrentStock] = useState({});
     const [stockList, setStockList] = useState([]);
+    const [mode, setMode] = useState('');
+
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    const [range, setRange] = useState(['1m', new Date().setDate(today.getDate() - 31)]);
+    const [dataSelect, setDataSelect] = useState({Open: true, Close: true, High: false, Low: false, Price: false});
+    const [notificationText, setNotificationText] = useState('');
+    const [notificationIsNegative, setNotificationIsNegative] = useState(false);
+    const [refresh, setRefresh] = useState(0);
 
     useEffect(() => {
         getUser();
@@ -78,11 +88,11 @@ const Assets = () => {
             <Search />
             <TypeMenu />
             <h1>Your Money - $10,482.06</h1>
-            <StockSelector stockList={stockList} setStock={setCurrentStock}/>
-            <Graph />
+            <StockSelector stockList={stockList} currentStock={currentStock} setStock={setCurrentStock}/>
+            <Graph currentStock={currentStock} range={range} dataSelect={dataSelect} />
             <div className='row'>
-                <BuySell />
-                <StockInfo stock={currentStock}/>
+                <BuySell setRefresh={setRefresh} setNotificationText={setNotificationText} setNotificationIsNegative={setNotificationIsNegative} mode={mode} setMode={setMode} currentStock={currentStock} currentUser={currentUser} />
+                <StockInfo stock={currentStock ? currentStock : {}}/>
             </div>
         </div>
     );

@@ -29,11 +29,76 @@
     margin: 5px 0px;
 }
 
+.collections hr {
+    border:2px solid white;
+    border-radius:9999px;
+    margin:10px 0px;
+}
+
+.roundDivider {
+    border:3px solid white;
+    border-radius:20px;
+    width:90%;
+    margin: 0px 0px 0px 0px;
+    padding:3px 0px;
+    font-size: 1.2rem;
+    font-weight:bold;
+}
+
+.upperDivider {
+    border-top:3px solid white;
+    border-radius:20px;
+    width:85%;
+    margin: 0px 0px 0px 0px;
+    color:transparent;
+    padding:5px 0px;
+    font-size: .5rem;
+}
+
+.lowerDivider {
+    border-bottom:3px solid white;
+    border-radius:20px;
+    width:85%;
+    margin: 0px 0px 0px 0px;
+    color:transparent;
+    padding:5px 0px;
+    font-size: .5rem;
+}
+
+.noList {
+    width:100%;
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:space-around;
+    align-items:center;
+}
+
+.noList span {
+    margin:0px;
+}
+
+.noList button {
+    margin: 10px 0px 0px 0px;
+    border-radius:9999px;
+    border:none;
+    border:3px solid mediumseagreen;
+    background-color:mediumseagreen;
+    color:white;
+    font-family:'Fugaz One';
+    font-size:1.5rem;
+    padding:5px 20px;
+    transition: all .2s ease-in-out;
+}
+
+.noList button:hover {
+    border:3px solid white;
+    transition: all .2s ease-in-out;
+}
+
 .stockList {
     width:90%;
-    margin: 10px 0px 0px 0px;
-    border-top: none;
-    border-radius: 0px 0px 10px 10px;
+    margin: 0px 0px 0px 0px;
+    border-radius: 20px;
     display:flex;
     flex-flow:column nowrap;
     justify-content:flex-start;
@@ -43,7 +108,7 @@
     direction: rtl;
 
     --scrollbar-width: 8px;
-    --mask-height: 30px;
+    --mask-height: 10px;
     padding:var(--mask-height) 0px;
 
     --mask-image-content: linear-gradient(
@@ -183,4 +248,182 @@
 .stockBoxColumn3 {
     align-items:flex-end;
     justify-content:flex-end;
+}
+
+.listModalWrapper {
+    width:100vw;
+    height:100vh;
+    background-color:rgba(0,0,0,.5);
+    margin:0;
+    display:flex;
+    flex-flow:row nowrap;
+    justify-content:center;
+    align-items:center;
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:4;
+}
+
+.listModal {
+    z-index:5;
+    border: 3px solid white;
+    background-color: #142132;
+    border-radius: 20px;
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    width:30%;
+}
+
+.listModal h1 {
+    margin:10px 0px;
+    font-family:'Fugaz One';
+    background-color:#1b3046;
+    line-height:20px;
+    border-radius:10px 20px 10px 20px;
+    width:90%;
+}
+
+.listModal span {
+    width:80%;
+    margin:10px 0px;
+    font-style:italic;
+}
+
+.listModal hr {
+    width:90%;
+    margin:0;
+}
+
+.listModal form {
+    width:100%;
+}
+
+.listModalButtonsCreate {
+    width:100%;
+    display:flex;
+    flex-flow: row nowrap;
+    justify-content:space-around;
+    align-items:center;
+    margin:10px 0px;
+}
+
+.listModalButtonsCreate button {
+    background: linear-gradient(to bottom right, mediumseagreen, transparent);
+    color: white;
+    border:none;
+    border-radius:9999px;
+    padding:5px 20px;
+    width:40%;
+    font-family:'Fugaz One';
+    font-size:1.5rem;
+    transition:all .2s ease-in-out;
+}
+
+.listModalButtonsCreate button:hover {
+    background: linear-gradient(to bottom right, transparent, mediumseagreen);
+    transition:all .2s ease-in-out;
+}
+
+.selectedList {
+    width:100%;
+    height:100px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    display:flex;
+    flex-flow:row nowrap;
+    justify-content:center;
+    align-items:center;
+}
+
+.listEntry {
+    width:40%;
+    min-width:40%;
+    max-height:100px;
+    display:flex;
+    flex-flow: row nowrap;
+    justify-content:center;
+    align-items:center;
+    border: 3px solid white;
+    border-radius:20px;
+    padding:10px;
+    margin:0px 10px;
+}
+
+.listEntry h2 {
+    margin:0;
+    text-align:left;
+    font-size: 1.5rem;
+}
+
+.listEntry span {
+    margin:0px;
+    text-align:left;
+    font-size:1rem;
+    
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.listEntry button {
+    background:transparent;
+    border:none;
+    font-family:'Trebuchet MS';
+    font-size:1.5rem;
+    font-weight:bold;
+    color:white;
+    margin:0;
+    opacity:1;
+    transition:all .2s ease-in-out;
+}
+
+.listEntry button:hover {
+    opacity:.7;
+    transition:all .2s ease-in-out;
+}
+
+.listEntryCol1 {
+    display:flex;
+    flex-flow:column nowrap;
+    align-items:flex-start;
+    justify-content:center;
+    width:90%;
+}
+
+.listEntryCol2 {
+    display:flex;
+    flex-flow:column nowrap;
+    align-items:flex-end;
+    justify-content:center;
+    width:10%;
+}
+
+.listModalNameSection {
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:center;
+    align-items:center;
+    width:100%;
+}
+
+.listModalNameSection span {
+    font-style:none;
+}
+
+.listModalNameSection input {
+    background:transparent;
+    border-radius:5px;
+    border:3px solid white;
+    font-family:'Trebuchet MS';
+    font-size:1.2rem;
+    color:white;
+    padding:5px 15px;
+    margin:0;
+    width:60%;
 }

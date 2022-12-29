@@ -12,6 +12,7 @@
     background-color:#142132;
     overflow:hidden;
     visibility:hidden;
+    z-index:20;
 }
 
 .notificationContainer span, .notificationContainerNegative span {

@@ -159,7 +159,7 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
         let tickText = '';
 
         if (range[0] === '1d') {
-            tickText = '%b %d';
+            tickText = '%-I:%M %p';
         } else if (range[0] === '5d') {
             tickText = '%b %d';
         }  else if (range[0] === '1m' || range[0] === 'MTD') {

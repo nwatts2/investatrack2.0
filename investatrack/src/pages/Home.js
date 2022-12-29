@@ -7,11 +7,15 @@ import DataSelector from '../components/DataSelector';
 import Graph from '../components/Graph';
 import StockInfo from '../components/StockInfo';
 import News from '../components/News';
+import Notification from '../components/Notification';
 
 const Home = () => {
     const [currentUser, setCurrentUser] = useState({});
     const [currentStock, setCurrentStock] = useState({});
     const [stockList, setStockList] = useState([]);
+    const [notificationText, setNotificationText] = useState('');
+    const [notificationIsNegative, setNotificationIsNegative] = useState(false);
+    const [refresh, setRefresh] = useState(0);
 
     const today = new Date();
     today.setHours(0,0,0,0);
@@ -22,7 +26,7 @@ const Home = () => {
     useEffect(() => {
         getUser();
 
-    }, []);
+    }, [refresh]);
 
     useEffect(() => {
         if (currentUser) {
@@ -86,7 +90,7 @@ const Home = () => {
         <div className='mainPage'>
             <Search />
             <div className='row'>
-                <Collections currentUser={currentUser}/>
+                <Collections currentUser={currentUser} setNotificationText={setNotificationText} setNotificationIsNegative={setNotificationIsNegative} setRefresh={setRefresh} />
                 <div className='homeMain'>
                     <div className='title'>
                         <h2 style={{textDecoration: 'underline'}}>{currentUser && currentUser.name ? currentUser.name + "'s" : 'Your'} Portfolio </h2> 
@@ -107,6 +111,7 @@ const Home = () => {
                 </div>
             </div>
             <News />
+            <Notification text={notificationText} isNegative={notificationIsNegative} />
         </div>
        
     );

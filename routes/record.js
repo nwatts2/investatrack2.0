@@ -218,6 +218,83 @@ router.route('/user/exchange').post(async (req, res) => {
         }
     }
 });    
+
+router.route('/user/updateList').post(async (req, res) => {
+    const userID = req.body.user;
+    const listName = req.body.listName;
+    const stocks = req.body.stocks;
+    let haltFunction = false;
+
+    for (let stock of stocks) {
+        stock.stockID = ObjectId(stock.stockID);
+    }
+
+    if (listName === '') {
+        haltFunction = true;
+        res.json({status: 'emptyName'});
+
+    } else if (stocks.length === 0) {
+        haltFunction = true;
+        res.json({status: 'emptyStocks'});
+    }
+
+    let db = await dbo.getDB();
+    let userQuery = {_id: ObjectId(userID)};
+
+    let userResult;
+
+    if (!haltFunction) {
+        try {
+            userResult = await db.collection('users').findOne(userQuery);
+    
+        } catch (error) {
+            res.json({status: 'fail', statusCode: error});
+    
+        } finally {
+            if (userResult) {
+                let list = userResult.lists || [];
+    
+                if (userResult.lists) {
+                    let index = userResult.lists.findIndex((entry) => {return entry.name === listName});
+                    if (index !== -1) {
+                        res.json({status: 'nameAlreadyExists'});
+                        haltFunction = true;
+    
+                    } else {
+                        const listEntry = {
+                            name: listName,
+                            stocks: stocks
+                        };
+    
+                        list.push(listEntry);
+                    }
+    
+                } else {
+                    const listEntry = {
+                        name: listName,
+                        stocks: stocks
+                    };
+    
+                    list.push(listEntry);
+                }
+    
+                if (!haltFunction) {
+                    newValues = {$set: {lists: list}};
+        
+                    try {
+                        db.collection('users').updateOne(userQuery, newValues).then((response) => {
+                            res.json({status: 'success'})
+                        });
+            
+                    } catch (error) {
+                        res.json({status: 'fail', statusCode: error});
+            
+                    }
+                }
+            }
+        }
+    }
+}); 
     
     
 router.route("/getNews").get(async function (req, res) {
