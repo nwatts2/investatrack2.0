@@ -91,6 +91,20 @@ router.route('/stocks/sector/:sector/:limit').get(async function (req, res) {
     });
 });
 
+router.route('/stocks/multiple/:ids').get(async function (req, res) {
+    let db = await dbo.getDB();
+
+    const symbols = req.params.ids.split('-');
+
+    let stockQuery = {name: {'$in': symbols}};
+
+    db.collection('stocks').find(stockQuery).toArray(function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+
+});
+
 router.route('/user/stocks/:id').get(async function (req, res) {
     let db = await dbo.getDB();
     let newQuery = {_id: ObjectId(req.params.id)};

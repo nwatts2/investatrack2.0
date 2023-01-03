@@ -5,30 +5,51 @@ import ModalSearch from '../components/ModalSearch';
 import '../css/Collections.css';
 
 const ListBox = ({ list }) => {
+    let stockString = '';
+    let stockLimit = 0;
+
+    if (list && list.stocks) {
+        for (let stock of list.stocks) {
+            if (stock.name) {
+                stockString += stock.name + ', ';
+            }
+        }
+    }
+
+    stockString = stockString.slice(0, stockString.length - 2);
+
     return (
-        <div className='listBox'>
-        <div className={list && list.change ? (list.change > 0 ? 'stockBox positiveStock' : 'stockBox negativeStock') : 'stockBox'}>
-                <div className='stockBoxColumn1'>
-                    <h3>{list ? list.name : ''}</h3>
-                    <span>{list && list.longName ? list.longName : ''}</span>
+        <div className={list && list.change ? (list.change > 0 ? 'listBox positiveStock' : 'listBox negativeStock') : 'listBox'}>
+                <h2>{list ? list.name : ''}</h2>
+                <div className='listBoxRow'>
+                    <div className='listBoxColumn1'>
+                        {list.stocks.map((stock) => {
+                            if (stockLimit < 3) {
+                                return <span>{stock.name}</span>;
+                            } else if (stockLimit === 4) {
+                                return <span>{stock.name + '...'}</span>;
+                            } else {
+                                return;
+                            }
+                        })}
+                    </div>
+                    <div className='listBoxColumn2'>
+                        <CollectionsGraph currentStock={list} />
+                    </div>
+                    <div className='listBoxColumn3'>
+                        <h4>{list && list.change ? (list.change > 0 ? "+" + list.change.toLocaleString('en-US', {
+                                style: 'currency',
+                                currency:'USD'
+                            }) : list.change.toLocaleString('en-US', {
+                                style: 'currency',
+                                currency:'USD'
+                            })) : ''}</h4>
+                        <h3>{list && list.price ? list.price.toLocaleString('en-US', {
+                                style: 'currency',
+                                currency:'USD'
+                            }) : 'Unknown'}</h3>
+                    </div>
                 </div>
-                <div className='stockBoxColumn2'>
-                    <CollectionsGraph currentStock={list} />
-                </div>
-                <div className='stockBoxColumn3'>
-                    <h4>{list && list.change ? (list.change > 0 ? "+" + list.change.toLocaleString('en-US', {
-                            style: 'currency',
-                            currency:'USD'
-                        }) : list.change.toLocaleString('en-US', {
-                            style: 'currency',
-                            currency:'USD'
-                        })) : ''}</h4>
-                    <h3>{list && list.price ? list.price.toLocaleString('en-US', {
-                            style: 'currency',
-                            currency:'USD'
-                        }) : 'Unknown'}</h3>
-                </div>
-            </div>
         </div>
     )
 };
@@ -188,6 +209,8 @@ const StockBox = ({ currentStock }) => {
 
 const Collections = ({ currentUser, setNotificationText, setNotificationIsNegative, setRefresh }) => {
     const [stockList, setStockList] = useState([]);
+    const [lists, setLists] = useState([]);
+    const [listStocks, setListStocks] = useState([]);
     const [makeList, setMakeList] = useState(false);
 
     useEffect(() => {
@@ -212,7 +235,135 @@ const Collections = ({ currentUser, setNotificationText, setNotificationIsNegati
 
         }
 
+        if (JSON.stringify(currentUser.lists) !== JSON.stringify(lists)) {setLists(currentUser.lists)}
+
     }, [JSON.stringify(currentUser)]);
+
+    useEffect(() => {
+        getListInfo()
+
+    }, [JSON.stringify(lists)]);
+
+    useEffect(() => {
+        calcListInfo();
+
+    }, [listStocks]);
+
+    async function getListInfo () {
+        const neededStockArray = [];
+        let neededStockString = '';
+
+        for (let list of lists) {
+            if (list.stocks) {
+                for (let stock of list.stocks) {
+                    if (!neededStockArray.includes(stock.name)) {
+                        neededStockArray.push(stock.name);
+                    }
+                }
+            }
+        }
+
+        for (let stock of neededStockArray) {
+            neededStockString += stock + '-';
+        }
+
+        neededStockString = neededStockString.slice(0, neededStockString.length - 1);
+
+        const stockResponse = await fetch(`/stocks/multiple/${neededStockString}`);
+
+        if (!stockResponse.ok) {
+            const message = `An error occured: ${stockResponse.statusText}`;
+            window.alert(message);
+            return;
+        }
+
+        const stockJSON = await stockResponse.json();        
+
+        if (JSON.stringify(stockJSON) !== JSON.stringify(listStocks)) {
+            setListStocks(stockJSON);
+        }
+    }
+
+    function calcListInfo () {
+        for (let list of lists) {
+            let price = 0, change = 0, history = [], recentHistory = [], finalRecent = [];
+
+            for (let stock of list.stocks) {
+                for (let neededStock of listStocks) {
+                    if (stock.name === neededStock.name) {
+                        price += neededStock.price;
+
+                        for (let day of neededStock.history) {
+                            const index = history.findIndex(e => e.date === day.date);
+                            let tempObj = {};
+
+                            if (index > -1) {
+                                history[index].open += day.open;
+                                history[index].close += day.close;
+                                history[index].high += day.high;
+                                history[index].low += day.low;
+
+                            } else {
+                                tempObj.date = day.date;
+                                tempObj.open = day.open;
+                                tempObj.close = day.close;
+                                tempObj.high = day.high;
+                                tempObj.low = day.low;
+
+                                history.push(tempObj);
+
+                            }
+
+                        }
+
+                        for (let day of neededStock.recentHistory) {
+                            const index = recentHistory.findIndex(e => e.date === day.date);
+                            let tempObj = {};
+
+                            if (index > -1) {
+                                recentHistory[index].price += day.price;
+                                recentHistory[index].activeStocks.push(stock.name);
+
+                            } else {
+                                tempObj.date = day.date;
+                                tempObj.price = day.price;
+                                tempObj.activeStocks = [];
+                                tempObj.activeStocks.push(stock.name);
+
+                                recentHistory.push(tempObj);
+                            }
+
+                        }
+
+                        list.price = price;
+                        list.history = history;
+
+                        for (let item of recentHistory) {
+                            if (item.activeStocks.length === listStocks.length) {
+                                finalRecent.push(item);
+                            }
+                        }
+
+                        list.recentHistory = finalRecent;
+
+                        const length = finalRecent.length;
+
+                        if (length > 1) {
+                            change = finalRecent[finalRecent.length - 1].price - finalRecent[finalRecent.length - 2].price;
+                        } else {
+                            change = 0;
+                        }
+
+                        list.change = change;
+
+                        break;
+                    }
+                }
+            }
+        }
+
+        setLists(lists);
+    }
 
     function startList () {
         if (!makeList) {setMakeList(true)}
@@ -226,22 +377,20 @@ const Collections = ({ currentUser, setNotificationText, setNotificationIsNegati
             </div>
             <hr style={{width: '95%'}}/>
             <div className='roundDivider'>Your Lists</div>
-            <hr style={{width: '85%'}}/>
             <div className='upperDivider'>{'Space'}</div>
-            <div className='listList'>
+            <div className='stockList'>
                 {currentUser.lists && currentUser.lists.length > 0 ? currentUser.lists.map((item, index) => {
-                    return (<ListBox />);
+                    return (<div className='stockTable'><ListBox list={item} /></div>);
                 }) :
                     <div className='noList'>
                         <span>Looks like you don't have any lists yet</span>
-                        <button onClick={startList} >Start a List</button>
                     </div>
                 }
+
+                <button onClick={startList} >Start a List</button>
             </div>
             <div className='lowerDivider'>{'Space'}</div>
-            <hr style={{width: '85%'}}/>
             <div className='roundDivider'>Your Stocks</div>
-            <hr style={{width: '85%'}}/>
             <div className='upperDivider'>{'Space'}</div>
             <div className='stockList'>
                 {stockList.length > 0 &&

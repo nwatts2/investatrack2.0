@@ -31,10 +31,10 @@ app.listen(process.env.PORT || 3001, () => {
 
         //users.main();
 
-        pullNews.getNews();
+        //pullNews.getNews();
 
         setInterval(() => {
-            pullNews.getNews();
+            //pullNews.getNews();
         }, 1800000);
 
     }, 3500);
