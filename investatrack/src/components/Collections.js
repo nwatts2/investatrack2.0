@@ -4,30 +4,29 @@ import CollectionsGraph from '../components/CollectionsGraph';
 import ModalSearch from '../components/ModalSearch';
 import '../css/Collections.css';
 
-const ListBox = ({ list }) => {
-    let stockString = '';
-    let stockLimit = 0;
-
-    if (list && list.stocks) {
-        for (let stock of list.stocks) {
-            if (stock.name) {
-                stockString += stock.name + ', ';
-            }
+const ListBox = ({ list, selectedList, setSelectedList }) => {
+    const limit = 3;
+    function handleClick (thisList) {
+        if (JSON.stringify(selectedList) !== JSON.stringify(thisList)) {
+            setSelectedList(thisList);
         }
     }
-
-    stockString = stockString.slice(0, stockString.length - 2);
 
     return (
         <div className={list && list.change ? (list.change > 0 ? 'listBox positiveStock' : 'listBox negativeStock') : 'listBox'}>
                 <h2>{list ? list.name : ''}</h2>
                 <div className='listBoxRow'>
                     <div className='listBoxColumn1'>
-                        {list.stocks.map((stock) => {
-                            if (stockLimit < 3) {
+                        {list.stocks.map((stock, index) => {
+                            if (index < limit) {
                                 return <span>{stock.name}</span>;
-                            } else if (stockLimit === 4) {
+
+                            } else if (index === limit && list.stocks.length <= limit) {
+                                return <span>{stock.name}</span>;
+
+                            } else if (index === limit && list.stocks.length > limit) {
                                 return <span>{stock.name + '...'}</span>;
+
                             } else {
                                 return;
                             }
@@ -48,6 +47,7 @@ const ListBox = ({ list }) => {
                                 style: 'currency',
                                 currency:'USD'
                             }) : 'Unknown'}</h3>
+                        <button onClick={() => {handleClick(list)}}>x</button>
                     </div>
                 </div>
         </div>
@@ -88,6 +88,64 @@ const ListModalEntry = ({ listEntry, newList, setNewList }) => {
     );
 }
 
+const ConfirmModal = ({ list, setSelectedList, currentUser, setNotificationText, setNotificationIsNegative, setRefresh }) => {
+    function handleConfirm() {
+        deleteList()
+        setSelectedList({});
+    }
+
+    function deleteList () {
+        const sendObj = {
+            user: currentUser._id,
+            listName: list.name,
+            stocks: list.stocks,
+            mode: 'DELETE'
+        };
+
+        fetch('/user/updateList/', {
+            method: 'POST',
+            body: JSON.stringify(sendObj),
+            headers: {
+                "Accept": 'application/json',
+                'Content-Type': 'application/json'
+            },
+        }).then(
+            (response) => (response.json())
+        ).then((response) => {
+            if (response.status === 'success') {
+                setNotificationText('List successfully deleted');
+                setTimeout(() => {setNotificationText('')}, 5000);
+                setNotificationIsNegative(false);
+                setRefresh((c) => {return c + 1});
+                
+            } else if (response.status === 'fail') {
+                setNotificationText('List deletion failed');
+                setTimeout(() => {setNotificationText('')}, 5000);
+                setNotificationIsNegative(true);
+            } else if (response.status === 'nameNotExists') {
+                setNotificationText('A list with this name does not exist. Please try another one.');
+                setTimeout(() => {setNotificationText('')}, 5000);
+                setNotificationIsNegative(true);
+            }
+        });
+
+        return;
+    }
+
+    return (
+        <div className='modalWrapper'>
+            <div className='modal'>
+                <h1>Confirm Deletion</h1>
+                <span>{`Are you sure you want to delete your "${list.name}" list?`}</span>
+                <div className='modalButtons'>
+                    <button onClick={handleConfirm}>Confirm</button>
+                    <button onClick={() => {setSelectedList({})}}>Cancel</button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 const ListModal = ({ currentUser, setMakeList, setNotificationText, setNotificationIsNegative, setRefresh }) => {
     const [newList, setNewList] = useState([]);
     const listName = useRef(null);
@@ -98,7 +156,8 @@ const ListModal = ({ currentUser, setMakeList, setNotificationText, setNotificat
         const sendObj = {
             user: currentUser._id,
             listName: listName.current.value !== '' ? listName.current.value : '',
-            stocks: newList
+            stocks: newList,
+            mode: 'ADD'
         };
 
         if (sendObj.listName !== '' && sendObj.stocks.length > 0) {
@@ -212,6 +271,7 @@ const Collections = ({ currentUser, setNotificationText, setNotificationIsNegati
     const [lists, setLists] = useState([]);
     const [listStocks, setListStocks] = useState([]);
     const [makeList, setMakeList] = useState(false);
+    const [selectedList, setSelectedList] = useState({});
 
     useEffect(() => {
         async function getStocks () {
@@ -380,7 +440,7 @@ const Collections = ({ currentUser, setNotificationText, setNotificationIsNegati
             <div className='upperDivider'>{'Space'}</div>
             <div className='stockList'>
                 {currentUser.lists && currentUser.lists.length > 0 ? currentUser.lists.map((item, index) => {
-                    return (<div className='stockTable'><ListBox list={item} /></div>);
+                    return (<div className='stockTable'><ListBox list={item} setSelectedList={setSelectedList} selectedList={selectedList} /></div>);
                 }) :
                     <div className='noList'>
                         <span>Looks like you don't have any lists yet</span>
@@ -409,6 +469,9 @@ const Collections = ({ currentUser, setNotificationText, setNotificationIsNegati
             <div className='lowerDivider'>{'Space'}</div>
             {makeList &&
                 <ListModal currentUser={currentUser} setMakeList={setMakeList} setNotificationText={setNotificationText} setNotificationIsNegative={setNotificationIsNegative} setRefresh={setRefresh} />
+            }
+            {selectedList.name &&
+                <ConfirmModal list={selectedList} setSelectedList={setSelectedList} currentUser={currentUser} setNotificationText={setNotificationText} setNotificationIsNegative={setNotificationIsNegative} setRefresh={setRefresh} />
             }
         </div>
     );

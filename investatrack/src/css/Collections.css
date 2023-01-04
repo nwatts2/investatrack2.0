@@ -439,6 +439,7 @@
     justify-content:center;
     align-items:center;
     border-radius:10px;
+    position:relative;
     width:85%;
     height:140px;
     padding:10px;
@@ -510,4 +511,94 @@
 
 .listBoxColumn3 {
     align-items:flex-end;
+}
+
+.listBox button {
+    position:absolute;
+    background-color:mediumseagreen;
+    color:white;
+    top: 5px;
+    right: 5px;
+    margin: 0px;
+    font-size:1rem;
+    padding:0px 3px;
+    line-height:1rem;
+    border-radius:50%;
+    transition: all .2s ease-in-out;
+}
+
+.listBox button:hover {
+    background-color:white;
+    color:mediumseagreen;
+}
+
+.modalWrapper {
+    width:100vw;
+    height:100vh;
+    background-color:rgba(0,0,0,.5);
+    margin:0;
+    display:flex;
+    flex-flow:row nowrap;
+    justify-content:center;
+    align-items:center;
+    top:0;
+    left:0;
+    z-index:4;
+}
+
+.modal {
+    z-index:5;
+    border: 3px solid white;
+    background-color: #142132;
+    border-radius: 20px;
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    width:30%;
+}
+
+.modal h1 {
+    margin:10px 0px;
+    font-family:'Fugaz One';
+    background-color:#1b3046;
+    line-height:20px;
+    white-space:nowrap;
+    text-align:center;
+    border-radius:10px 20px 10px 20px;
+    width:90%;
+}
+
+.modal span {
+    width:80%;
+    margin:20px 0px;
+}
+
+.modalButtons {
+    width:100%;
+    display:flex;
+    flex-flow: row nowrap;
+    justify-content:center;
+    align-items:center;
+}
+
+.modalButtons button {
+    width:auto;
+    min-width:0;
+    margin: 0px 25px;
+    background:mediumseagreen;
+    border-radius:9999px;
+    color: white;
+    font-family:'Fugaz One';
+    font-weight: bold;
+    font-size:1.3rem;
+    padding:5px 10px;
+    border:3px solid mediumseagreen;
+    transition: all .2s ease-in-out;
+}
+
+.modalButtons button:hover {
+    border:3px solid white;
+    transition: all .2s ease-in-out;
 }

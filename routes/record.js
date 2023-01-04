@@ -231,12 +231,13 @@ router.route('/user/exchange').post(async (req, res) => {
             }
         }
     }
-});    
+});
 
 router.route('/user/updateList').post(async (req, res) => {
     const userID = req.body.user;
     const listName = req.body.listName;
     const stocks = req.body.stocks;
+    const mode = req.body.mode;
     let haltFunction = false;
 
     for (let stock of stocks) {
@@ -254,60 +255,111 @@ router.route('/user/updateList').post(async (req, res) => {
 
     let db = await dbo.getDB();
     let userQuery = {_id: ObjectId(userID)};
-
+    
     let userResult;
 
     if (!haltFunction) {
-        try {
-            userResult = await db.collection('users').findOne(userQuery);
-    
-        } catch (error) {
-            res.json({status: 'fail', statusCode: error});
-    
-        } finally {
-            if (userResult) {
-                let list = userResult.lists || [];
-    
-                if (userResult.lists) {
-                    let index = userResult.lists.findIndex((entry) => {return entry.name === listName});
-                    if (index !== -1) {
-                        res.json({status: 'nameAlreadyExists'});
-                        haltFunction = true;
-    
+        if (mode === 'ADD') {
+            try {
+                userResult = await db.collection('users').findOne(userQuery);
+        
+            } catch (error) {
+                res.json({status: 'fail', statusCode: error});
+        
+            } finally {
+                if (userResult) {
+                    let list = userResult.lists || [];
+        
+                    if (userResult.lists) {
+                        let index = userResult.lists.findIndex((entry) => {return entry.name === listName});
+                        if (index !== -1) {
+                            res.json({status: 'nameAlreadyExists'});
+                            haltFunction = true;
+        
+                        } else {
+                            const listEntry = {
+                                name: listName,
+                                stocks: stocks
+                            };
+        
+                            list.push(listEntry);
+                        }
+        
                     } else {
                         const listEntry = {
                             name: listName,
                             stocks: stocks
                         };
-    
+        
                         list.push(listEntry);
                     }
-    
-                } else {
-                    const listEntry = {
-                        name: listName,
-                        stocks: stocks
-                    };
-    
-                    list.push(listEntry);
-                }
-    
-                if (!haltFunction) {
-                    newValues = {$set: {lists: list}};
         
-                    try {
-                        db.collection('users').updateOne(userQuery, newValues).then((response) => {
-                            res.json({status: 'success'})
-                        });
+                    if (!haltFunction) {
+                        newValues = {$set: {lists: list}};
             
-                    } catch (error) {
-                        res.json({status: 'fail', statusCode: error});
-            
+                        try {
+                            db.collection('users').updateOne(userQuery, newValues).then((response) => {
+                                res.json({status: 'success'})
+                            });
+                
+                        } catch (error) {
+                            res.json({status: 'fail', statusCode: error});
+                
+                        }
                     }
                 }
             }
+            
+        } else if (mode === 'DELETE') {
+            try {
+                userResult = await db.collection('users').findOne(userQuery);
+        
+            } catch (error) {
+                res.json({status: 'fail', statusCode: error});
+        
+            } finally {
+                if (userResult) {
+                    let list = userResult.lists || [];
+        
+                    if (userResult.lists) {
+                        let index = userResult.lists.findIndex((entry) => {return entry.name === listName});
+                        if (index !== -1) {
+                            list.splice(index, 1);
+        
+                        } else {
+                            res.json({status: 'nameNotExists'});
+                            haltFunction = true;
+                        }
+        
+                    } else {
+                        res.json({status: 'nameNotExists'});
+                        haltFunction = true;
+        
+                    }
+        
+                    if (!haltFunction) {
+                        newValues = {$set: {lists: list}};
+            
+                        try {
+                            db.collection('users').updateOne(userQuery, newValues).then((response) => {
+                                res.json({status: 'success'})
+                            });
+                
+                        } catch (error) {
+                            res.json({status: 'fail', statusCode: error});
+                
+                        }
+                    }
+                }
+            }
+        } else {
+            res.json({status: 'fail'});
         }
     }
+
+    
+
+    
 }); 
     
     
