@@ -1,0 +1,100 @@
+.userInfoWrapper {
+    border: 5px solid mediumseagreen;
+    background-color: #142132;
+    box-shadow: 0px 0px 10px mediumseagreen;
+    border-radius:20px;
+    padding:10px;
+    width:75%;
+    position:relative;
+}
+
+.userTitle {
+    display:flex;
+    flex-flow:row nowrap;
+    justify-content:center;
+    align-items:center;
+    width:100%;
+}
+
+.userTitleImage {
+    width:30%;
+    display:flex;
+    flex-flow: row nowrap;
+    align-items:center;
+    justify-content:center;
+}
+
+.userTitleImage img {
+    width:60%;
+    border-radius:50%;
+    border:5px solid white;
+    box-shadow:5px 5px 5px #151522;
+}
+
+.userTitleText {
+    width:60%;
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:center;
+    align-items:flex-start;
+}
+
+.userTitleText h2 {
+    font-size:4rem;
+    letter-spacing:1.5rem;
+    line-height:3.5rem;
+    text-transform:uppercase;
+    font-family:'Fugaz One';
+    width:100%;
+}
+
+.userTitleText h3 {
+    text-align:center;
+    width:100%;
+    font-size:1.5rem;
+}
+  
+.userInfo {
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:center;
+    align-items:center;
+    margin:20px 0px;
+}
+
+.userInfoHeader {
+    width:75%;
+    padding:25px;
+    background-color: #142132;
+    border-radius:20px;
+}
+
+.userInfoHeader h1 {
+    margin:0;
+    background-color:#1b3046;
+    border: 2px solid #2e4766;
+    border-radius: 10px 20px 10px 20px;
+    line-height:20px;
+    width:auto;
+    text-transform:uppercase;
+    font-family: 'Fugaz One';
+    text-shadow:0px 0px 5px black;
+}
+  
+.userInfoSub {
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:center;
+    align-items:flex-start;
+    background-color:#182a3f;
+    padding:10px;
+    border-radius:0px 0px 20px 20px;
+    width:60%;
+}
+
+.userInfoSub span {
+    font-size:1.4rem;
+    margin:5px 0px;
+    font-weight:bold;
+
+}

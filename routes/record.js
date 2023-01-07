@@ -83,7 +83,17 @@ router.route('/user/recommended/:id').get(async function (req, res) {
 
 router.route('/stocks/sector/:sector/:limit').get(async function (req, res) {
     let db = await dbo.getDB();
-    let newQuery = {sector: req.params.sector};
+
+    let newQuery;
+
+    if (req.params.sector === 'Other') {
+        newQuery = {sector: ''};
+        
+    } else {
+        newQuery = {sector: req.params.sector};
+
+    }
+
 
     db.collection('stocks').find(newQuery).sort({price: -1}).limit(Number(req.params.limit)).toArray(function (err, result) {
         if (err) throw err;
@@ -167,20 +177,26 @@ router.route('/user/exchange').post(async (req, res) => {
             }
         
             let needsUpdate = false;
+            let newPrice, newQuantity;
         
             for (let stock of stockArray) {
                 if (stock.name === stockName) {
+
                     if (mode === 'BUY') {
-                        needsUpdate = true
-                        stock.quantity = Number(stock.quantity) + Number(quantity);
-                        stock.pPrice = stockResult.price;
+                        needsUpdate = true;
+                        newQuantity = Number(stock.quantity) + Number(quantity);
+                        stock.quantity = newQuantity;
+                        newPrice = stockResult.price;
+                        stock.pPrice = newPrice;
                         stock.pTotal += totalPrice;
 
                     } else if (mode === 'SELL') {
                         if (Number(stock.quantity) >= Number(quantity)) {
                             needsUpdate = true
-                            stock.quantity = Number(stock.quantity) - Number(quantity);
-                            stock.pPrice = stockResult.price;
+                            newQuantity = Number(stock.quantity) - Number(quantity);
+                            stock.quantity = newQuantity;
+                            newPrice = stockResult.price;
+                            stock.pPrice = newPrice;
                             stock.pTotal += -1 * totalPrice;
 
                             heldQuantity = stock.quantity;
@@ -201,18 +217,63 @@ router.route('/user/exchange').post(async (req, res) => {
                 pTotal: totalPrice,
                 name: stockName
             })}
+
+            const today = new Date();
+            today.setHours(0,0,0,0);
+
+            const history = userResult.history;
+            let transactions = [];
+
+            const dateIndex = history.findIndex((e) => e.date.getTime() === today.getTime());
+            let stockIndex;
+
+            if (dateIndex !== -1) {
+                stockIndex = history[dateIndex].transactions.findIndex((e) => e.name === stockName);
+
+                if (stockIndex !== -1) {
+                    history[dateIndex].transactions[stockIndex] = {
+                        name: stockName,
+                        newQuantity: newQuantity,
+                        pPrice: newPrice,
+                    }
+
+                } else {
+                    history[dateIndex].transactions.push({
+                        name: stockName,
+                        newQuantity: newQuantity,
+                        pPrice: newPrice,
+                    })
+                }
+
+            } else {
+                transactions.push({
+                    name: stockName,
+                    newQuantity: newQuantity,
+                    pPrice: newPrice,
+                });
+
+                const newEntry = {
+                    date: today,
+                    cMoney: (mode === 'BUY' ? (userResult.cMoney - totalPrice) : (userResult.cMoney + totalPrice)),
+                    transactions: transactions
+                };
+
+                history.push(newEntry);
+            }
         
             let newValues;
             
             if (mode === 'BUY') {
                 newValues = {$set: {
                     stocks: stockArray,
-                    cMoney: userResult.cMoney - totalPrice
+                    cMoney: userResult.cMoney - totalPrice,
+                    history: history
                 }};
             } else if (mode === 'SELL' && needsUpdate) {
                 newValues = {$set: {
                     stocks: stockArray,
-                    cMoney: userResult.cMoney + totalPrice
+                    cMoney: userResult.cMoney + totalPrice,
+                    history: history
                 }};
             }
     

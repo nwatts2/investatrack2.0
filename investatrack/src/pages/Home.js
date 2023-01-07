@@ -102,7 +102,7 @@ const Home = () => {
                     <StockSelector stockList={stockList} currentStock={currentStock} setStock={setCurrentStock}/>
                     <div className='graphTitleRow'>
                         <RangeSelector range={range} setRange={setRange} />
-                        <h2>-{currentStock && currentStock.name ? currentStock.name : ''}-</h2>
+                        <h2>-{currentStock && currentStock.fname ? currentStock.fname : ''}-</h2>
                         <DataSelector range={range} dataSelect={dataSelect} setDataSelect={setDataSelect} />
                     </div>
                     
