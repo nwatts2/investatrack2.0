@@ -3,15 +3,20 @@ import Search from '../components/Search';
 import StockSelector from '../components/StockSelector';
 import Graph from '../components/Graph';
 import StockInfo from '../components/StockInfo';
-import TypeMenu from '../components/TypeMenu';
+import StockBreakdown from '../components/StockBreakdown';
 import BuySell from '../components/BuySell';
 import UserInfo from '../components/UserInfo';
+import RangeSelector from '../components/RangeSelector';
+import DataSelector from '../components/DataSelector';
+import ModeSelector from '../components/ModeSelector';
+import Recommended from '../components/Recommended';
 
 const Assets = () => {
     const [currentUser, setCurrentUser] = useState({});
     const [currentStock, setCurrentStock] = useState({});
     const [stockList, setStockList] = useState([]);
     const [mode, setMode] = useState('');
+    const [graphMode, setGraphMode] = useState('PERFORMANCE');
 
     const today = new Date();
     today.setHours(0,0,0,0);
@@ -176,14 +181,25 @@ const Assets = () => {
     return (
         <div className='mainPage'>
             <Search />
-            <TypeMenu />
             <UserInfo currentUser={currentUser} stockTotals={stockTotals} range={range} />
-            <h1>Your Money - $10,482.06</h1>
-            <StockSelector stockList={stockList} currentStock={currentStock} setStock={setCurrentStock}/>
-            <Graph currentStock={currentStock} range={range} dataSelect={dataSelect} />
+            <ModeSelector mode={graphMode} setMode={setGraphMode} />
             <div className='row'>
+                <div className='assetGraph'>
+                    <StockSelector stockList={stockList} currentStock={currentStock} setStock={setCurrentStock}/>
+                    <div className='graphTitleRow'>
+                        <RangeSelector range={range} setRange={setRange} />
+                        <h2>-{currentStock && currentStock.fname ? currentStock.fname : ''}-</h2>
+                        <DataSelector range={range} dataSelect={dataSelect} setDataSelect={setDataSelect} />
+                    </div>
+                    
+                    <Graph currentStock={currentStock} range={range} dataSelect={dataSelect} />
+                </div>
+                <StockBreakdown />
+            </div>
+            <StockInfo stock={currentStock ? currentStock : {}}/>
+            <div className='row'>
+                <Recommended currentUser={currentUser} />
                 <BuySell setRefresh={setRefresh} setNotificationText={setNotificationText} setNotificationIsNegative={setNotificationIsNegative} mode={mode} setMode={setMode} currentStock={currentStock} currentUser={currentUser} />
-                <StockInfo stock={currentStock ? currentStock : {}}/>
             </div>
         </div>
     );

@@ -183,6 +183,14 @@ a {
   width:80%;
 }
 
+.assetGraph {
+  width:85%;
+  display:flex;
+  flex-flow: column nowrap;
+  justify-content:center;
+  align-items:center;
+}
+
 .negativeEntry {color:red;}
 .positiveEntry {color:green;}
 

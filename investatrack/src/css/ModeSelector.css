@@ -1,0 +1,36 @@
+.modeSelector {
+    width:100%;
+    margin:10px 0px 20px 0px;
+    display:flex;
+    flex-flow:row nowrap;
+    align-items:center;
+    justify-content:center;
+}
+
+.modeSelector button {
+    background-color:transparent;
+    color:white;
+    font-family:'Fugaz One';
+    font-size:1.8rem;
+    font-weight:light;
+    margin:0px 100px;
+    padding:5px 10px;
+    border-radius:20px;
+    opacity:1;
+    transition: opacity .2s ease-in-out;
+}
+
+.modeSelector button:hover {
+    opacity:.7;
+    transition:opacity .2s ease-in-out;
+}
+
+.modeButton {
+    border:none;
+}
+
+.modeButtonChecked {
+    font-weight: bold;
+    border: 3px solid white;
+    border-radius:20px;
+}
