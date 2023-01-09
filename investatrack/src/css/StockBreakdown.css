@@ -1,6 +1,55 @@
-.stockBreakdown {
-    height:400px;
-    width:15%;
+.stockBreakdownWrapper {
+    width:20%;
+    padding:10px;
+    background-color:#142132;
+    border-radius:20px;
+}
+
+.stockBreakdownOuterBorder {
     border-radius:20px;
     border:3px solid white;
+    background-color:#2e4766;
+    padding:5px;
+}
+
+.stockBreakdown {
+    width:100%;
+    border-radius:16px;
+    padding:10px 20px;
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:center;
+    align-items:center;
+    background-color:#142132;
+    border:3px solid white;
+}
+
+.stockBreakdown h1 {
+    margin:0;
+    font-family:'Fugaz One';
+    width:100%;
+    border-radius:20px 20px 0px 0px;
+    text-shadow: 0px 0px 5px black;
+}
+
+.stockBreakdown hr {
+    border: 2px solid white;
+    width:80%;
+    margin:0px 0px 20px 0px;
+}
+
+.stockBreakdown h3 {
+    margin:0px 0px 25px 0px;
+    width:100%;
+    text-align:right;
+    font-family:'Fugaz One';
+    text-transform:uppercase;
+}
+
+.stockBreakdown span {
+    margin:0px 0px 5px 0px;
+    width:100%;
+    text-align:left;
+    font-weight:bold;
+    text-decoration:underline;
 }

@@ -204,7 +204,7 @@ const Assets = () => {
                     
                     <Graph currentStock={currentStock} range={range} dataSelect={dataSelect} />
                 </div>
-                <StockBreakdown />
+                <StockBreakdown currentStock={currentStock} currentUser={currentUser} />
             </div>
             <StockInfo stock={currentStock ? currentStock : {}}/>
             <ManageLists currentUser={currentUser} setNotificationIsNegative={setNotificationIsNegative} setNotificationText={setNotificationText} setRefresh={setRefresh} />

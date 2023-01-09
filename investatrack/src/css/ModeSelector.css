@@ -1,10 +1,26 @@
 .modeSelector {
-    width:100%;
+    width:40%;
     margin:10px 0px 20px 0px;
     display:flex;
     flex-flow:row nowrap;
     align-items:center;
     justify-content:center;
+    position:relative;
+}
+
+.modeSelector span {
+    position:absolute;
+    color:transparent;
+    font-family:'Fugaz One';
+    font-size:1.8rem;
+    font-weight:light;
+    padding:5px 10px;
+    border: 3px solid white;
+    border-radius:20px;
+    background-color:#142132;
+    z-index:0;
+    width:50%;
+    transition: all .2s ease-in-out;
 }
 
 .modeSelector button {
@@ -13,24 +29,18 @@
     font-family:'Fugaz One';
     font-size:1.8rem;
     font-weight:light;
-    margin:0px 100px;
-    padding:5px 10px;
-    border-radius:20px;
+    width:50%;
     opacity:1;
-    transition: opacity .2s ease-in-out;
+    border:none;
+    z-index:1;
+    transition: all .2s ease-in-out;
 }
 
 .modeSelector button:hover {
     opacity:.7;
-    transition:opacity .2s ease-in-out;
-}
-
-.modeButton {
-    border:none;
+    transition:all .2s ease-in-out;
 }
 
 .modeButtonChecked {
     font-weight: bold;
-    border: 3px solid white;
-    border-radius:20px;
 }

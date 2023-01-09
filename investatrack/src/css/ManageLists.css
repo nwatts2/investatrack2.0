@@ -6,7 +6,7 @@
     width:85%;
     height:auto;
     max-height:1150px;
-    padding:0;
+    padding:0px 10px;
     margin:20px 0px;
     background: linear-gradient(to bottom, #142132 40%, transparent 90%);
 
@@ -67,8 +67,8 @@
     overflow-x:auto;
 
     --scrollbar-width: 8px;
-    --mask-height: 30px;
-    padding:0px var(--mask-height) 10px var(--mask-height);
+    --mask-height: 50px;
+    padding:0px var(--mask-height) 10px 20px;
 
     --mask-image-content: linear-gradient(
         to right,

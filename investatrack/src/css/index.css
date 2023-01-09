@@ -184,7 +184,7 @@ a {
 }
 
 .assetGraph {
-  width:85%;
+  width:80%;
   display:flex;
   flex-flow: column nowrap;
   justify-content:center;
