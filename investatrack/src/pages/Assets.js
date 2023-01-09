@@ -10,6 +10,9 @@ import RangeSelector from '../components/RangeSelector';
 import DataSelector from '../components/DataSelector';
 import ModeSelector from '../components/ModeSelector';
 import Recommended from '../components/Recommended';
+import ManageLists from '../components/ManageLists';
+import Notification from '../components/Notification';
+
 
 const Assets = () => {
     const [currentUser, setCurrentUser] = useState({});
@@ -34,7 +37,14 @@ const Assets = () => {
     useEffect(() => {
         getUser();
 
-    }, []);
+    }, [refresh]);
+
+    useEffect(() => {
+        if (currentUser && currentUser.stocks) {
+            updateStockTotals();
+
+        }
+    }, [range]);
 
     useEffect(() => {
         if (currentUser) {
@@ -197,10 +207,12 @@ const Assets = () => {
                 <StockBreakdown />
             </div>
             <StockInfo stock={currentStock ? currentStock : {}}/>
+            <ManageLists currentUser={currentUser} setNotificationIsNegative={setNotificationIsNegative} setNotificationText={setNotificationText} setRefresh={setRefresh} />
             <div className='row'>
                 <Recommended currentUser={currentUser} />
                 <BuySell setRefresh={setRefresh} setNotificationText={setNotificationText} setNotificationIsNegative={setNotificationIsNegative} mode={mode} setMode={setMode} currentStock={currentStock} currentUser={currentUser} />
             </div>
+            <Notification text={notificationText} isNegative={notificationIsNegative} />
         </div>
     );
 }

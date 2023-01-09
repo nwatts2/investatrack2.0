@@ -26,8 +26,8 @@ app.listen(process.env.PORT || 3001, () => {
 
     setTimeout(async () => {
         //stocks.main();
-        //stocks.getTrending();
-        //stocks.getRecommended();
+        stocks.getTrending();
+        stocks.getRecommended();
 
         //users.main();
 

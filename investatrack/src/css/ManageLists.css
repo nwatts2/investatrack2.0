@@ -1,74 +1,32 @@
-.collections {
-    border-radius:20px;
+.manageLists {
     display:flex;
     flex-flow:column nowrap;
-    justify-content:flex-start;
+    justify-content:center;
     align-items:center;
-    align-self:flex-start;
-    width:25%;
+    width:85%;
     height:auto;
     max-height:1150px;
-    padding:15px 5px;
+    padding:0;
+    margin:20px 0px;
+    background: linear-gradient(to bottom, #142132 40%, transparent 90%);
+
 }
 
-.collections .collectionsTitle {
-    border:3px solid white;
-    border-radius: 5px;
-    width:100%;
-    padding: 20px;
-    margin: 0px;
+.manageLists h1 {
+    font-family: 'Fugaz One';
+    font-size: 3rem;
+    text-decoration:underline;
+    margin:0;
 }
 
-.collections h2 {
-    font-size:3rem;
-    margin:0px;
-}
-
-.collections span {
-    font-size: 1.1rem;
-    margin: 5px 0px;
-}
-
-.collections hr {
+.manageLists hr {
+    width:105%;
     border:2px solid white;
     border-radius:9999px;
-    margin:10px 0px;
+    margin:0;
 }
 
-.collections .roundDivider {
-    border:3px solid white;
-    border-radius:20px;
-    width:90%;
-    margin: 0px 0px 10px 0px;
-    padding:3px 0px;
-    font-size: 1.2rem;
-    font-weight:bold;
-    font-family:'Fugaz One';
-    background-color:mediumseagreen;
-    text-transform:uppercase;
-}
-
-.collections .upperDivider {
-    border-top:3px solid white;
-    border-radius:20px;
-    width:85%;
-    margin: 0px 0px 0px 0px;
-    color:transparent;
-    padding:5px 0px;
-    font-size: .5rem;
-}
-
-.collections .lowerDivider {
-    border-bottom:3px solid white;
-    border-radius:20px;
-    width:85%;
-    margin: 0px 0px 20px 0px;
-    color:transparent;
-    padding:5px 0px;
-    font-size: .5rem;
-}
-
-.collections .noList {
+.noList {
     width:100%;
     display:flex;
     flex-flow:column nowrap;
@@ -76,12 +34,12 @@
     align-items:center;
 }
 
-.collections .noList span {
+.noList span {
     margin:0px;
 }
 
-.collections .stockList button {
-    margin: 40px 0px 0px 0px;
+.manageLists button {
+    margin: 10px 0px 0px 0px;
     border-radius:9999px;
     border:none;
     border:3px solid mediumseagreen;
@@ -93,43 +51,40 @@
     transition: all .2s ease-in-out;
 }
 
-.collections .stockList button:hover {
+.manageLists button:hover {
     border:3px solid white;
     transition: all .2s ease-in-out;
 }
 
-.collections .stockList {
-    width:90%;
-    max-height:500px;
+.manageLists .stockList {
+    width:100%;
     margin: 0px 0px 0px 0px;
     border-radius: 20px;
     display:flex;
-    flex-flow:column nowrap;
+    flex-flow:row nowrap;
     justify-content:flex-start;
     align-items:center;
-    overflow-y:auto;
-    background: radial-gradient(ellipse, #142132 40%, transparent 70%);
-    direction: rtl;
+    overflow-x:auto;
 
     --scrollbar-width: 8px;
-    --mask-height: 10px;
-    padding:var(--mask-height) 0px;
+    --mask-height: 30px;
+    padding:0px var(--mask-height) 10px var(--mask-height);
 
     --mask-image-content: linear-gradient(
-        to bottom,
+        to right,
         transparent,
         black var(--mask-height),
         black calc(100% - var(--mask-height)),
         transparent
     );
-    --mask-size-content: calc(100% - var(--scrollbar-width)) 100%;
+    --mask-size-content: 100% calc(100% - var(--scrollbar-width));
     --mask-image-scrollbar: linear-gradient(black, black);
-    --mask-size-scrollbar: var(--scrollbar-width) 100%;
+    --mask-size-scrollbar: 100% var(--scrollbar-width);
 
-    mask-image: var(--mask-image-scrollbar), var(--mask-image-content);
-    mask-size: var(--mask-size-scrollbar), var(--mask-size-content);
+    mask-image: var(--mask-image-content), var(--mask-image-scrollbar);
+    mask-size: var(--mask-size-content), var(--mask-size-scrollbar);
 
-    mask-position: 0 0, 100% 0;
+    mask-position: 0 0, 0 100%;
     mask-repeat: no-repeat, no-repeat;
 
     scrollbar-width:thin;
@@ -137,27 +92,27 @@
     transition: all .2s;
 }
 
-.collections .stockList:hover {
-    scrollbar-color: rgba(255, 255, 255, .3) transparent;
-    transition: all .2s;
+.manageLists .stockList:hover {
+    scrollbar-color:rgba(255,255,255,0.3) transparent;
+    transition:all .5s .1s;
 }
 
-.collections::-webkit-scrollbar-track {
-    background:transparent;
+.manageLists::-webkit-scrollbar {
+    width: var(--scrollbar-width);
 }
 
-.collections::-webkit-scrollbar-track-piece:end {
-    background:transparent;
-    margin-bottom:200px;
+.manageLists::-webkit-scrollbar-thumb {
+    background-color:white;
+    border-radius: 9999px;
 }
 
-.collections::-webkit-scrollbar-track-piece:start {
-    background:transparent;
-    margin-top:200px;
+.manageLists::-webkit-scrollbar-track {
+    background-color:transparent;
 }
 
-.collections .stockTable {
-    width:100%;
+.manageLists .stockTable {
+    min-width:360px;
+    width:25%;
     margin:0;
     display:flex;
     flex-flow:column nowrap;
@@ -166,7 +121,7 @@
     direction:ltr;
 }
 
-.collections .styledLink {
+.manageLists .styledLink {
     width:100%;
     display:flex;
     flex-flow: row nowrap;
@@ -174,29 +129,11 @@
     justify-content:center;
 }
 
-.collections .stockTable hr {
+.manageLists .stockTable hr {
     width:10%;
     border:2px solid white;
     border-radius:20px;
     margin:10px 0px;
-}
-
-.collections .stockBox {
-    display:flex;
-    flex-flow:row nowrap;
-    justify-content:space-between;
-    align-items:center;
-    border-radius:10px;
-    width:85%;
-    height:100px;
-    padding:10px;
-    background:linear-gradient(to bottom, #252533, transparent);
-    transition: all .1s;
-}
-
-.collections .stockBox:hover {
-    transform: scale(1.1);
-    transition: all .1s;
 }
 
 .negativeStock {
@@ -207,55 +144,7 @@
     background:linear-gradient(to bottom, #1e695b, transparent);
 }
 
-.collections .stockBox h3 {
-    font-size:1.5rem;
-    font-weight:light;
-    margin:0;
-}
-
-.collections .stockBox h4 {
-    font-size:1.1rem;
-    font-weight:light;
-    margin:0px 0px 10px 0px;
-}
-
-.collections .stockBox span {
-    font-size:1rem;
-    margin:0;
-    text-align:left;
-
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-
-.collections .stockBoxColumn1, .collections .stockBoxColumn2, .collections .stockBoxColumn3 {
-    display:flex;
-    flex-flow:column nowrap;
-    justify-content:center;
-    align-items:center;
-    width:33%;
-    height:100%;
-}
-
-.collections .stockBoxColumn1 {
-    align-items:flex-start;
-}
-
-.collections .stockBoxColumn2 {
-    align-items:center;
-    justify-content:center;
-    height:100%;
-}
-
-.collections .stockBoxColumn3 {
-    align-items:flex-end;
-    justify-content:flex-end;
-}
-
-.collections .listModalWrapper {
+.manageLists .listModalWrapper {
     width:100vw;
     height:100vh;
     background-color:rgba(0,0,0,.5);
@@ -270,7 +159,7 @@
     z-index:4;
 }
 
-.collections .listModal {
+.manageLists .listModal {
     z-index:5;
     border: 3px solid white;
     background-color: #142132;
@@ -283,7 +172,7 @@
     width:30%;
 }
 
-.collections .listModal h1 {
+.manageLists .listModal h1 {
     margin:10px 0px;
     font-family:'Fugaz One';
     background-color:#1b3046;
@@ -292,22 +181,22 @@
     width:90%;
 }
 
-.collections .listModal span {
+.manageLists .listModal span {
     width:80%;
     margin:10px 0px;
     font-style:italic;
 }
 
-.collections .listModal hr {
+.manageLists .listModal hr {
     width:90%;
     margin:0;
 }
 
-.collections .listModal form {
+.manageLists .listModal form {
     width:100%;
 }
 
-.collections .listModalButtonsCreate {
+.manageLists .listModalButtonsCreate {
     width:100%;
     display:flex;
     flex-flow: row nowrap;
@@ -316,7 +205,7 @@
     margin:10px 0px;
 }
 
-.collections .listModalButtonsCreate button {
+.manageLists .listModalButtonsCreate button {
     background: linear-gradient(to bottom right, mediumseagreen, transparent);
     color: white;
     border:none;
@@ -328,23 +217,23 @@
     transition:all .2s ease-in-out;
 }
 
-.collections .listModalButtonsCreate button:hover {
+.manageLists .listModalButtonsCreate button:hover {
     background: linear-gradient(to bottom right, transparent, mediumseagreen);
     transition:all .2s ease-in-out;
 }
 
-.collections .selectedList {
+.manageLists .selectedList {
     width:100%;
     height:100px;
     overflow-x:auto;
     overflow-y:hidden;
     display:flex;
     flex-flow:row nowrap;
-    justify-content:center;
+    justify-content:flex-start;
     align-items:center;
 }
 
-.collections .listEntry {
+.manageLists .listEntry {
     width:40%;
     min-width:40%;
     max-height:100px;
@@ -358,13 +247,13 @@
     margin:0px 10px;
 }
 
-.collections .listEntry h2 {
+.manageLists .listEntry h2 {
     margin:0;
     text-align:left;
     font-size: 1.5rem;
 }
 
-.collections .listEntry span {
+.manageLists .listEntry span {
     margin:0px;
     text-align:left;
     font-size:1rem;
@@ -376,7 +265,7 @@
     text-overflow:ellipsis;
 }
 
-.collections .listEntry button {
+.manageLists .listEntry button {
     background:transparent;
     border:none;
     font-family:'Trebuchet MS';
@@ -388,12 +277,12 @@
     transition:all .2s ease-in-out;
 }
 
-.collections .listEntry button:hover {
+.manageLists .listEntry button:hover {
     opacity:.7;
     transition:all .2s ease-in-out;
 }
 
-.collections .listEntryCol1 {
+.manageLists .listEntryCol1 {
     display:flex;
     flex-flow:column nowrap;
     align-items:flex-start;
@@ -401,7 +290,7 @@
     width:90%;
 }
 
-.collections .listEntryCol2 {
+.manageLists .listEntryCol2 {
     display:flex;
     flex-flow:column nowrap;
     align-items:flex-end;
@@ -409,7 +298,7 @@
     width:10%;
 }
 
-.collections .listModalNameSection {
+.manageLists .listModalNameSection {
     display:flex;
     flex-flow:column nowrap;
     justify-content:center;
@@ -417,11 +306,11 @@
     width:100%;
 }
 
-.collections .listModalNameSection span {
+.manageLists .listModalNameSection span {
     font-style:none;
 }
 
-.collections .listModalNameSection input {
+.manageLists .listModalNameSection input {
     background:transparent;
     border-radius:5px;
     border:3px solid white;
@@ -433,7 +322,7 @@
     width:60%;
 }
 
-.collections .listBox {
+.manageLists .listBox {
     display:flex;
     flex-flow:column nowrap;
     justify-content:center;
@@ -444,20 +333,22 @@
     height:140px;
     padding:10px;
     margin:10px 0px;
-    background:linear-gradient(to bottom, #252533, transparent);
+    background-color:#141d32af;
+    border:2px solid mediumseagreen;
+    box-shadow: 0px 0px 5px mediumseagreen;
     transition: all .1s;
 }
 
-.collections .listBox h2 {
+.manageLists .listBox h2 {
     font-size:1.5rem;
 }
 
-.collections .listBox:hover {
+.manageLists .listBox:hover {
     transform: scale(1.05);
     transition: all .1s;
 }
 
-.collections .listBoxRow {
+.manageLists .listBoxRow {
     display:flex;
     flex-flow:row nowrap;
     justify-content:space-between;
@@ -465,19 +356,19 @@
     width:100%;
 }
 
-.collections .listBox h3 {
+.manageLists .listBox h3 {
     font-size:1.5rem;
     font-weight:light;
     margin:0;
 }
 
-.collections .listBox h4 {
+.manageLists .listBox h4 {
     font-size:1.1rem;
     font-weight:light;
     margin:0px 0px 10px 0px;
 }
 
-.collections .listBox span {
+.manageLists .listBox span {
     font-size:1rem;
     font-weight:bold;
     margin:0;
@@ -490,7 +381,7 @@
     text-overflow:ellipsis;
 }
 
-.collections .listBoxColumn1, .collections .listBoxColumn2, .collections .listBoxColumn3 {
+.manageLists .listBoxColumn1, .manageLists .listBoxColumn2, .manageLists .listBoxColumn3 {
     display:flex;
     flex-flow:column nowrap;
     justify-content:center;
@@ -499,21 +390,21 @@
     height:100%;
 }
 
-.collections .listBoxColumn1 {
+.manageLists .listBoxColumn1 {
     width:20%;
 }
 
-.collections .listBoxColumn2 {
+.manageLists .listBoxColumn2 {
     align-items:center;
     justify-content:center;
     width:40%;
 }
 
-.collections .listBoxColumn3 {
+.manageLists .listBoxColumn3 {
     align-items:flex-end;
 }
 
-.collections .listBox button {
+.manageLists .listBox button {
     position:absolute;
     background-color:mediumseagreen;
     color:white;
@@ -527,12 +418,12 @@
     transition: all .2s ease-in-out;
 }
 
-.collections .listBox button:hover {
+.manageLists .listBox button:hover {
     background-color:white;
     color:mediumseagreen;
 }
 
-.collections .modalWrapper {
+.manageLists .modalWrapper {
     width:100vw;
     height:100vh;
     background-color:rgba(0,0,0,.5);
@@ -546,7 +437,7 @@
     z-index:4;
 }
 
-.collections .modal {
+.manageLists .modal {
     z-index:5;
     border: 3px solid white;
     background-color: #142132;
@@ -559,7 +450,7 @@
     width:30%;
 }
 
-.collections .modal h1 {
+.manageLists .modal h1 {
     margin:10px 0px;
     font-family:'Fugaz One';
     background-color:#1b3046;
@@ -570,12 +461,12 @@
     width:90%;
 }
 
-.collections .modal span {
+.manageLists .modal span {
     width:80%;
     margin:20px 0px;
 }
 
-.collections .modalButtons {
+.manageLists .modalButtons {
     width:100%;
     display:flex;
     flex-flow: row nowrap;
@@ -583,7 +474,7 @@
     align-items:center;
 }
 
-.collections .modalButtons button {
+.manageLists .modalButtons button {
     width:auto;
     min-width:0;
     margin: 0px 25px;
@@ -598,7 +489,7 @@
     transition: all .2s ease-in-out;
 }
 
-.collections .modalButtons button:hover {
+.manageLists .modalButtons button:hover {
     border:3px solid white;
     transition: all .2s ease-in-out;
 }
