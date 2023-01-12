@@ -21,7 +21,7 @@ const NavBar = () => {
                     <Link to='/assets' style={url === 'assets' ? {fontWeight: 'bold'} : {}}>My Assets</Link>
                 </li>
                 <li>
-                    <Link to='/' style={url === '' ? {fontWeight: 'bold'} : {}}>Home</Link>
+                    <Link to='/' style={url === '' ? {fontWeight: 'bold'} : {}}>InvestaTrack</Link>
                 </li>
                 <li>
                     <Link to='/browse' style={url === 'browse' ? {fontWeight: 'bold'} : {}}>Browse</Link>

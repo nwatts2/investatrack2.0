@@ -13,7 +13,7 @@
     border-radius:999px;
 }
 
-.buySell {
+.buySellWrapper .buySell {
     width:95%;
     border-radius:10px;
     padding:30px 10px;
@@ -25,7 +25,7 @@
     justify-content:center;
 }
 
-.buySell h2 {
+.buySellWrapper .buySell h2 {
     font-family:'Fugaz One';
     font-size:2.1rem;
     border:3px solid white;
@@ -35,12 +35,12 @@
     width:100%;
 }
 
-.buySell h3 {
+.buySellWrapper .buySell h3 {
     margin:10px 0px 0px 0px;
     text-decoration: underline;
 }
 
-.buySell button {
+.buySellWrapper .buySell button {
     color: white;
     background: linear-gradient(to bottom right, mediumseagreen, transparent);
     border:2px solid white;
@@ -55,16 +55,16 @@
     transition: all .2s;
 }
 
-.buySell button:hover {
+.buySellWrapper .buySell button:hover {
     opacity: .7;
     transition: all .2s;
 }
 
-.buySell button:disabled {
+.buySellWrapper .buySell button:disabled {
     opacity: .7;
 }
 
-.buySell input {
+.buySellWrapper .buySell input {
     border:3px solid white;
     border-radius:5px;
     padding: 5px 10px;
@@ -79,15 +79,15 @@
     font-weight:bold;
 }
 
-.buySell input::-webkit-inner-spin-button, .buySell input::-webkit-outer-spin-button {
+.buySellWrapper .buySell input::-webkit-inner-spin-button, .buySell input::-webkit-outer-spin-button {
     display:none;
 }
 
-.buySell input[type=number] {
+.buySellWrapper .buySell input[type=number] {
     -moz-appearance: textfield;
 }
 
-.buySell form {
+.buySellWrapper .buySell form {
     display:flex;
     flex-flow:column nowrap;
     align-items:center;
@@ -96,12 +96,12 @@
     margin: 5px 0px 0px 0px;
 }
 
-.buySell form hr {
+.buySellWrapper .buySell form hr {
     width: 80%;
     margin:5px;
 }
 
-.exchangeInfo {
+.buySellWrapper .exchangeInfo {
     display:flex;
     flex-flow:column nowrap;
     justify-content:center;
@@ -113,7 +113,7 @@
     padding: 10px 5px;
 }
 
-.exchangeInfo span {
+.buySellWrapper .exchangeInfo span {
     margin: 10px 0px 0px 0px;
     background-color:#142132;
     line-height:12px;
@@ -121,11 +121,11 @@
     width:75%;
 }
 
-.quantity {
+.buySellWrapper .quantity {
     width:100%;
 }
 
-.quantityInput {
+.buySellWrapper .quantityInput {
     width:100%;
     margin:10px 0px 0px 0px;
     display:flex; 
@@ -134,7 +134,7 @@
     justify-content:center;
 }
 
-.quantityInput button {
+.buySellWrapper .quantityInput button {
     min-width:0;
     width:auto;
     padding: 0px 15px;
@@ -144,7 +144,7 @@
     line-height:30px;
 }
 
-.modalWrapper {
+.buySellWrapper .modalWrapper {
     width:100vw;
     height:100vh;
     background-color:rgba(0,0,0,.5);
@@ -159,7 +159,7 @@
     z-index:4;
 }
 
-.modal {
+.buySellWrapper .modal {
     z-index:5;
     border: 3px solid white;
     background-color: #142132;
@@ -171,7 +171,7 @@
     padding:20px;
 }
 
-.modal h1 {
+.buySellWrapper .modal h1 {
     margin:10px 0px;
     font-family:'Fugaz One';
     background-color:#1b3046;
@@ -180,12 +180,12 @@
     width:90%;
 }
 
-.modal span {
+.buySellWrapper .modal span {
     width:80%;
     margin:20px 0px;
 }
 
-.modalButtons {
+.buySellWrapper .modalButtons {
     width:100%;
     display:flex;
     flex-flow: row nowrap;
@@ -193,7 +193,7 @@
     align-items:center;
 }
 
-.modalButtons button {
+.buySellWrapper .modalButtons button {
     width:auto;
     min-width:0;
     margin: 0px 25px;

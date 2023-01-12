@@ -5,6 +5,7 @@ import Popular from '../components/Popular';
 import Recommended from '../components/Recommended';
 import Categories from '../components/Categories';
 import News from '../components/News';
+import ProfileMenu from '../components/ProfileMenu';
 
 const Browse = () => {
     const [currentUser, setCurrentUser] = useState({});
@@ -32,6 +33,7 @@ const Browse = () => {
 
     return (
         <div className='mainPage'>
+            <ProfileMenu currentUser={currentUser} />
             <Search />
             <TypeMenu />
             <div className='titleSection'>

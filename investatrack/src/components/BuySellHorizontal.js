@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../css/BuySell.css';
+import BuySellSearch from '../components/BuySellSearch';
+import '../css/BuySellHorizontal.css';
 
 const ConfirmModal = ({mode, quantityAmount, setInitialized, setFinalized, currentStock}) => {
     function handleConfirm() {
@@ -25,13 +26,14 @@ const ConfirmModal = ({mode, quantityAmount, setInitialized, setFinalized, curre
     );
 }
 
-const BuySell = ({ mode, setMode, currentUser, currentStock, setRefresh, setNotificationText, setNotificationIsNegative }) => {
+const BuySellHorizontal = ({ mode, setMode, worth, currentUser, currentStock, setCurrentStock, setRefresh, setNotificationText, setNotificationIsNegative, stockList }) => {
     const [initialized, setInitialized] = useState(false);
     const [finalized, setFinalized] = useState(false);
     const [conditionals, setConditionals] = useState({canBuy: false, canSell: false});
-    const [quantityAmount, setQuantityAmount] = useState(-1);
+    const [quantityAmount, setQuantityAmount] = useState(0);
     const [heldQuantity, setHeldQuantity] = useState(0);
     const quantity = useRef(null);
+    const dropDown = useRef(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -40,6 +42,19 @@ const BuySell = ({ mode, setMode, currentUser, currentStock, setRefresh, setNoti
         }
 
     }, [quantityAmount, quantity.current, navigate])
+
+    useEffect(() => {
+        if (currentUser && currentUser.stocks && currentStock) {
+            let index = currentUser.stocks.findIndex((e) => e.name === currentStock.name);
+
+            if (index !== -1) {
+                setHeldQuantity(currentUser.stocks[index].quantity);
+            } else {
+                setHeldQuantity(0);
+            }
+        }
+
+    }, [JSON.stringify(currentStock), JSON.stringify(currentUser)]);
 
     useEffect(() => {
         if (finalized) {
@@ -53,7 +68,6 @@ const BuySell = ({ mode, setMode, currentUser, currentStock, setRefresh, setNoti
 
             finalizePurchase(sendObj);
             setFinalized(false);
-            setMode('');
         }
 
     }, [finalized])
@@ -78,6 +92,17 @@ const BuySell = ({ mode, setMode, currentUser, currentStock, setRefresh, setNoti
         }
 
     }, [currentStock, currentUser, conditionals, quantityAmount, finalized]);
+
+    useEffect(() => {
+        if (mode === 'SELL') {
+            let index = stockList.findIndex((e) => e.name === currentStock.name);
+
+            if (index === -1) {
+                setCurrentStock(stockList[0]);
+            }
+        }
+
+    }, [mode]);
 
     async function initializePurchase() {
         if (quantityAmount > 0) {
@@ -119,21 +144,6 @@ const BuySell = ({ mode, setMode, currentUser, currentStock, setRefresh, setNoti
         return;
     }
 
-    function selectMode(newMode) {
-        if (newMode === mode && mode !== '') {
-            if (mode === 'BUY' || mode === 'SELL') {
-                initializePurchase();
-            }
-
-        } else if (newMode !== mode) {
-            if (newMode === '' && mode !== newMode) {setMode('')}
-            else if (mode !== newMode) {setMode(newMode)}
-    
-            setQuantityAmount(0);
-        }
-        
-    }
-
     function updateQuantity() {
         if (quantity.current) {
             let newValue = Number(quantity.current.value);
@@ -162,6 +172,16 @@ const BuySell = ({ mode, setMode, currentUser, currentStock, setRefresh, setNoti
         } else if (method === 'DECREMENT') {
             if (quantityAmount > 0) {
                 setQuantityAmount((c) => c - 1);
+            }
+        }
+    }
+
+    function updateStock() {
+        if (dropDown.current) {
+            if (currentStock && currentStock.name !== dropDown.current.value) {
+                let index = stockList.findIndex((e) => e.name === dropDown.current.value);
+
+                if (index !== -1) {setCurrentStock(stockList[index])}
             }
         }
     }
@@ -199,48 +219,62 @@ const BuySell = ({ mode, setMode, currentUser, currentStock, setRefresh, setNoti
     }
 
     return (
-        <div className='buySellWrapper'>
-            <hr />
+        <div className='buySellWrapperHorizontal'>
             <div className='buySell'>
-                <h2>Exchange {currentStock ? currentStock.name : 'Stock'}</h2>
-                <div className='exchangeInfo'>
-                    <h3 style={{margin:0}} >Balance</h3>
-                    <span>{currentUser.cMoney ? currentUser.cMoney.toLocaleString('en-US', {style:'currency', currency:'USD'}) : '$0.00'}</span>
-                    <h3>Amount Owned</h3>
-                    <span>{heldQuantity.toLocaleString('en-US', {minimumFractionDigits: 0})} share{heldQuantity !== 1 ? 's' : ''}</span>
+                <div className='modeSelectBlock'>
+                    <button className={mode === 'BUY' ? 'selected' : ''} onClick={() => {setMode('BUY')}} >Buy</button>
+                    <button className={mode === 'SELL' ? 'selected' : ''} onClick={() => {setMode('SELL')}} >Sell</button>
                 </div>
-                <form onSubmit={(e) => {(initialized && (mode === 'BUY' || mode === 'SELL')) ? handleSubmit(e) : e.preventDefault()}} method='POST'>
-                    <hr />
-                    {(mode === 'BUY' || mode === 'SELL')  &&
-                        <div className='quantity'>
-                            <h3 style={{margin:0, textDecoration: 'none'}}>Quantity</h3>
-                            <div className='quantityInput'>
-                                <button onClick={() => {changeQuantity('DECREMENT')}}>{'-'}</button>
-                                <input type='text' onChange={updateQuantity} onBlur={handleBlur} ref={quantity} />
-                                <button onClick={() => {changeQuantity('INCREMENT')}}>{'+'}</button>
-
+                <div className='exchangeBlock'>
+                    <h2>Exchange {currentStock ? currentStock.name : 'Stock'}</h2>
+                    <div className='exchangeInfo'>
+                        <h3 style={{margin:0}} >Balance</h3>
+                        <span>{currentUser.cMoney ? currentUser.cMoney.toLocaleString('en-US', {style:'currency', currency:'USD'}) : '$0.00'}</span>
+                        <h3>Quantity Held</h3>
+                        <span>{heldQuantity.toLocaleString('en-US', {minimumFractionDigits: 0})} share{heldQuantity !== 1 ? 's' : ''}</span>
+                        <h3>Total Worth:</h3>
+                        <span>{worth.toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</span>
+                    </div>
+                </div>
+                <div className='actionBlock'>
+                    <form onSubmit={(e) => {(initialized && (mode === 'BUY' || mode === 'SELL')) ? handleSubmit(e) : e.preventDefault()}} method='POST'>
+                        <div className='searchSelect'>
+                            <h2>Search or Select</h2>
+                            <hr />
+                            <div className='row'>
+                                <BuySellSearch stock={currentStock} setStock={setCurrentStock} mode={mode} />
+                                <select ref={dropDown} onInput={updateStock} >
+                                    {stockList ? stockList.map((stock) => {
+                                        return <option>{stock.name}</option>
+                                    }) : ''}
+                                </select>
                             </div>
-                        </div>  
-                    }
-                    {(mode === 'BUY' || mode === '') &&
-                        <button onClick={() => {selectMode('BUY')}} disabled={conditionals.canBuy ? false : true}>BUY{currentStock.name ? ' ' + currentStock.name : ''}</button>
-                    }
-                    {(mode === 'SELL' || mode === '') &&
-                        <button onClick={() => {selectMode('SELL')}} disabled={conditionals.canSell ? false : true}>SELL{currentStock.name ? ' ' + currentStock.name : ''}</button>
-                    }
-                    {mode !== '' &&
-                        <button onClick={() => {selectMode('')}}>CANCEL</button>
-                    }
-                    <hr />
-                </form>
-                
+                        </div>
+                        {(mode === 'BUY' || mode === 'SELL')  &&
+                            <div className='quantity'>
+                                <h3 style={{margin:0, textDecoration: 'none'}}>Quantity</h3>
+                                <div className='quantityInput'>
+                                    <button onClick={() => {changeQuantity('DECREMENT')}}>{'-'}</button>
+                                    <input type='text' onChange={updateQuantity} onBlur={handleBlur} ref={quantity} />
+                                    <button onClick={() => {changeQuantity('INCREMENT')}}>{'+'}</button>
+
+                                </div>
+                            </div>  
+                        }
+                        {(mode === 'BUY') &&
+                            <button onClick={() => {initializePurchase()}} disabled={conditionals.canBuy ? false : true}>BUY{currentStock.name ? ' ' + currentStock.name : ''}</button>
+                        }
+                        {(mode === 'SELL') &&
+                            <button onClick={() => {initializePurchase()}} disabled={conditionals.canSell ? false : true}>SELL{currentStock.name ? ' ' + currentStock.name : ''}</button>
+                        }
+                    </form>
+                </div>
                 {initialized &&
                     <ConfirmModal mode={mode} currentStock={currentStock} quantityAmount={quantityAmount} setInitialized={setInitialized} setFinalized={setFinalized} />
                 }
             </div>
-            <hr />
         </div>
     );
 }
 
-export default BuySell;
+export default BuySellHorizontal;

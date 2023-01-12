@@ -10,7 +10,7 @@ nav {
     box-shadow: 1px 1px 1px #222;
 }
 
-ul {
+nav ul {
     list-style-type:none;
     font-family:'Fugaz One';
     text-transform:uppercase;
@@ -20,12 +20,13 @@ ul {
     width:100%;
 }
 
-li {
+nav li {
     opacity: 1;
     transition: all .2s;
+    position:relative;
 }
 
-li:hover {
+nav li:hover {
     opacity:.7;
     transition: all .2s;
 }

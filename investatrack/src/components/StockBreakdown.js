@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import '../css/StockBreakdown.css';
 
-const StockBreakdown = ({ currentStock, currentUser }) => {
+const StockBreakdown = ({ currentStock, currentUser, worth, setWorth }) => {
     const [quantity, setQuantity] = useState(0);
-    const [worth, setWorth] = useState(0);
     const [transaction, setTransaction] = useState(new Date(0));
 
     useEffect(() => {
@@ -29,6 +28,9 @@ const StockBreakdown = ({ currentStock, currentUser }) => {
             if (index !== -1) {
                 setQuantity(currentUser.stocks[index].quantity);
                 setWorth(() => {return currentUser.stocks[index].quantity * currentStock.price});
+            } else {
+                setQuantity(0);
+                setWorth(0);
             }
         }
     }

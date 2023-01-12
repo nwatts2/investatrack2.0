@@ -1,0 +1,84 @@
+.buySellSearchBox {
+    width:70%;
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+    margin:0px;
+}
+
+.buySellSearchBox input[type=search] {
+    border-radius:5px;
+    width:90%;
+    font-size:1.2rem;
+    text-align:left;
+    z-index:2;
+}
+
+.buySellSearchBox input[disabled] {
+    opacity:0.5;
+}
+
+.buySellSearchResultsBox {
+    position: absolute;
+    top:30px;
+    width:75%;
+    max-height:200px;
+    padding:20px 10px 10px 10px;
+    border:2px solid white;
+    border-radius:0px 0px 20px 20px;
+    background-color:#142132;
+    z-index:1;
+    overflow:auto;
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:flex-start;
+    align-items:center;
+}
+
+.buySellSearchResultWrapper hr {
+    border: 2px solid #182a3f;
+    margin:0;
+    width:90%;
+}
+
+.buySellSearchResultWrapper {
+    width:100%;
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:center;
+    align-items:center;
+    margin:0;
+}
+
+.buySellSearchResult {
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:center;
+    align-items:center;
+    margin:10px 0px;
+    border-radius:20px;
+    padding: 10px 10px;
+    width:100%;
+}
+
+.buySellSearchResult:hover {
+    opacity:0.7;
+}
+
+.buySellSearchResult h2 {
+    font-size:1.3rem;
+    line-height:1rem;
+    margin:0px;
+    width:100%;
+    text-align:right;
+}
+
+.buySellSearchResult h3 {
+    font-size:1rem;
+    margin:0px;
+    width:100%;
+    font-weight:light;
+    text-align:right;
+}

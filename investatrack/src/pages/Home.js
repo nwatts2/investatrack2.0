@@ -8,6 +8,7 @@ import Graph from '../components/Graph';
 import StockInfo from '../components/StockInfo';
 import News from '../components/News';
 import Notification from '../components/Notification';
+import ProfileMenu from '../components/ProfileMenu';
 
 const Home = () => {
     const [currentUser, setCurrentUser] = useState({});
@@ -88,6 +89,7 @@ const Home = () => {
 
     return (
         <div className='mainPage'>
+            <ProfileMenu currentUser={currentUser} />
             <Search />
             <div className='row'>
                 <Collections currentUser={currentUser} setNotificationText={setNotificationText} setNotificationIsNegative={setNotificationIsNegative} setRefresh={setRefresh} />
@@ -102,7 +104,7 @@ const Home = () => {
                     <StockSelector stockList={stockList} currentStock={currentStock} setStock={setCurrentStock}/>
                     <div className='graphTitleRow'>
                         <RangeSelector range={range} setRange={setRange} />
-                        <h2>-{currentStock && currentStock.fname ? currentStock.fname : ''}-</h2>
+                        <h2>-{currentStock && currentStock.name ? currentStock.name : ''}-</h2>
                         <DataSelector range={range} dataSelect={dataSelect} setDataSelect={setDataSelect} />
                     </div>
                     
