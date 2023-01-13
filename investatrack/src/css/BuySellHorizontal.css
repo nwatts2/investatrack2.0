@@ -5,7 +5,9 @@
     align-items:center;
     justify-content:center;
     border:5px solid #142132;
-    border-radius:10px;
+    border-radius:17px;
+    background-color:#2e4766;
+    padding:3px;
 }
 
 .buySellWrapperHorizontal .buySell {
@@ -13,7 +15,7 @@
     border-radius:10px;
     padding:20px 20px 20px 0px;
     background-color: #142132;
-    border:5px solid #2e4766;
+    border:5px solid mediumseagreen;
     display:flex;
     flex-flow: row nowrap;
     align-items:center;
@@ -117,7 +119,7 @@
 }
 
 .buySellWrapperHorizontal .modeSelectBlock .selected {
-    background: linear-gradient(to right, #2e4766, #142132 90%);
+    background: linear-gradient(to right, mediumseagreen, #142132 90%);
 }
 
 .buySellWrapperHorizontal .exchangeBlock {

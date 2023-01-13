@@ -51,7 +51,7 @@ a {
   flex-direction:column;
   align-items:center;
   margin-top:30px;
-  padding:20px 20px 60px 20px;
+  padding:10px 20px 60px 20px;
   box-shadow:0px 0px 50px #1e695b;
   background-color:#1b3046;
 }
@@ -64,6 +64,7 @@ a {
   flex-flow:column nowrap;
   align-items:center;
   justify-content:flex-start;
+  position:relative;
 }
 
 .titleSection {
@@ -184,8 +185,27 @@ a {
   width:80%;
 }
 
+.userInfoSection {
+  width:calc(100% + 40px);
+  padding:50px 0px 30px 0px;
+  margin:0px 0px 20px 0px;
+  display:flex;
+  flex-flow:column nowrap;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(to bottom, #142132 70%, transparent);
+}
+
+.userInfoSection .userPageTitle {
+  margin:0;
+  font-family: 'Fugaz One';
+  font-size:3rem;
+  text-decoration:underline;
+  text-transform: uppercase;
+}
+
 .assetGraph {
-  width:80%;
+  width:77%;
   display:flex;
   flex-flow: column nowrap;
   justify-content:center;

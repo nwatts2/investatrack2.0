@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Search from '../components/Search';
 import StockSelector from '../components/StockSelector';
-import Graph from '../components/Graph';
+import UserGraph from '../components/UserGraph';
 import StockInfo from '../components/StockInfo';
 import StockBreakdown from '../components/StockBreakdown';
 import BuySellHorizontal from '../components/BuySellHorizontal';
@@ -30,7 +30,7 @@ const Assets = () => {
     tempRange.setHours(0,0,0,0);
 
     const [range, setRange] = useState(['1m', tempRange.setDate(today.getDate() - 31)]);
-    const [dataSelect, setDataSelect] = useState({Open: true, Close: true, High: false, Low: false, Price: false});
+    const [dataSelect, setDataSelect] = useState({Open: true, Close: true, High: false, Low: false, Price: false, Cash: false});
     const [notificationText, setNotificationText] = useState('');
     const [notificationIsNegative, setNotificationIsNegative] = useState(false);
     const [refresh, setRefresh] = useState(0);
@@ -121,7 +121,6 @@ const Assets = () => {
                         let index = tempHistory.findIndex((e) => e.date === day.date);
                         let newEntry;
 
-                        let dateIndex = currentUser.history.findIndex((e) => e.date === day.date);
                         let ownedQuantity = 0;
 
                         for (let closestDate of currentUser.history) {
@@ -193,23 +192,29 @@ const Assets = () => {
     return (
         <div className='mainPage'>
             <ProfileMenu currentUser={currentUser} />
-            <Search />
-            <UserInfo currentUser={currentUser} stockTotals={stockTotals} range={range} />
+            <div className='userInfoSection'>
+                <h1 className='userPageTitle'>{`${currentUser.fname ? currentUser.fname + "'s Portfolio" : 'Your Portfolio'}`}</h1>
+                <UserInfo currentUser={currentUser} stockTotals={stockTotals} range={range} />
+            </div>
             <ModeSelector mode={graphMode} setMode={setGraphMode} />
             <div className='row'>
                 <div className='assetGraph'>
-                    <StockSelector stockList={stockList} currentStock={currentStock} setStock={setCurrentStock}/>
+                    {graphMode === 'STOCKS' &&
+                        <StockSelector stockList={stockList} currentStock={currentStock} setStock={setCurrentStock}/>
+                    }
                     <div className='graphTitleRow'>
                         <RangeSelector range={range} setRange={setRange} />
-                        <h2>-{currentStock && currentStock.name ? currentStock.name : ''}-</h2>
-                        <DataSelector range={range} dataSelect={dataSelect} setDataSelect={setDataSelect} />
+                        <h2>-{graphMode === 'STOCKS' ? (currentStock && currentStock.name ? currentStock.name : '') : 'PORTFOLIO'}-</h2>
+                        <DataSelector graphMode={graphMode} range={range} dataSelect={dataSelect} setDataSelect={setDataSelect} />
                     </div>
                     
-                    <Graph currentStock={currentStock} range={range} dataSelect={dataSelect} />
+                    <UserGraph graphMode={graphMode} stockList={stockList} currentUser={currentUser} currentStock={currentStock} range={range} dataSelect={dataSelect} />
                 </div>
-                <StockBreakdown worth={worth} setWorth={setWorth} currentStock={currentStock} currentUser={currentUser} />
+                <StockBreakdown graphMode={graphMode} stockList={stockList} worth={worth} setWorth={setWorth} currentStock={currentStock} currentUser={currentUser} />
             </div>
-            <StockInfo stock={currentStock ? currentStock : {}}/>
+            <div className='row' style={{marginTop:'30px'}}>
+                <StockInfo stock={currentStock ? currentStock : {}}/>
+            </div>
             <ManageLists currentUser={currentUser} setNotificationIsNegative={setNotificationIsNegative} setNotificationText={setNotificationText} setRefresh={setRefresh} />
             <div className='row'>
                 <Recommended currentUser={currentUser} />

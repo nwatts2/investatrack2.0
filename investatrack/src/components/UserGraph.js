@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import * as d3 from 'd3';
+import '../css/Graph.css';
 
-const LineChart = ({ currentStock, range, dataSelect }) => {
+const UserGraph = ({ graphMode, stockList, currentUser, currentStock, range, dataSelect }) => {
     const [activeIndex, setActiveIndex] = useState(null);
     const [data, setData] = useState([]);
     const [recentData, setRecentData] = useState([]);
@@ -18,43 +19,265 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
         const tempData = [];
         const tempRecentData = [];
 
-        if (currentStock && currentStock.history) {
-            for (let x of currentStock.history) {
-                tempData.push(x);
-            }
-
-            if (currentStock.recentHistory) {
-                for (let x of currentStock.recentHistory) {
-                    tempRecentData.push(x);
+        if (graphMode === 'STOCKS') {
+            if (currentStock && currentStock.history) {
+                for (let x of currentStock.history) {
+                    tempData.push(x);
                 }
+    
+                if (currentStock.recentHistory) {
+                    for (let x of currentStock.recentHistory) {
+                        tempRecentData.push(x);
+                    }
+    
+                    tempRecentData.forEach((i) => {
+                        if (i.date) {
+                            const tempDate = new Date(i.date);
+                            i.date = tempDate;
+                        }
+                        i.price = Number(i.price);
+                    });
+                
+                    if (JSON.stringify(recentData) !== JSON.stringify(tempRecentData)) {
+                        setRecentData(tempRecentData);
+                    }
+                }
+    
+                tempData.forEach((i) => {
+                    if (i.date) {
+                        const tempDate = new Date(i.date);
+                        i.date = tempDate;
+                    }
+                    i.close = Number(i.close);
+                });
+            
+                if (JSON.stringify(tempData) !== JSON.stringify(data)) {
+                    setData(tempData);
+                }
+            }
+        } else if (graphMode === 'PERFORMANCE') {
+            if (stockList && currentUser && currentUser.history) {
+                for (let stock of stockList) {
+                    if (stock.history) {
+                        for (let day of currentUser.history) {
+                            let dayDate = new Date(day.date);
+
+                            const stockIndex = stock.history.findIndex((e) => {
+                                const eDate = new Date(e.date);
+
+                                return (eDate.getTime() >= dayDate.getTime() && eDate.getTime() < new Date(day.date).setDate(dayDate.getDate() + 1));
+                            });
+
+                            const dataIndex = tempData.findIndex((e) => new Date(e.date).getTime() === dayDate.getTime());
+
+                            let stockData, quantity = 0;
+
+                            if (stockIndex !== -1) {
+                                stockData = stock.history[stockIndex];
+
+                                for (let newDay of currentUser.history) {
+                                    if (new Date(newDay.date).getTime() < new Date(day.date).setDate(dayDate.getDate() + 1)) {
+                                        const transactionIndex = newDay.transactions.findIndex((e) => e.name === stock.name);
+
+                                        if (transactionIndex >= 0) {quantity = newDay.transactions[transactionIndex].newQuantity}
+                                    }
+                                }
+                            } else {
+                                for (let closestDay of stock.history) {
+                                    if (new Date(closestDay.date).getTime() < new Date(day.date).setDate(dayDate.getDate() + 1)) {
+                                        stockData = closestDay;
+                                    }
+                                }
+
+                                for (let newDay of currentUser.history) {
+                                    if (new Date(newDay.date).getTime() < new Date(day.date).setDate(dayDate.getDate() + 1)) {
+                                        const transactionIndex = newDay.transactions.findIndex((e) => e.name === stock.name);
+
+                                        if (transactionIndex >= 0) {quantity = newDay.transactions[transactionIndex].newQuantity}
+                                    }
+                                }
+                            }
+
+                            if (dataIndex !== -1) {
+                                tempData[dataIndex].open += stockData.open * quantity;
+                                tempData[dataIndex].close += stockData.close * quantity;
+                                if (quantity > 0) {
+                                    tempData[dataIndex].activeStocks.push(stock.name);
+                                }
+
+                            } else {
+                                const tempEntry = {};
+
+                                tempEntry.date = day.date;
+                                tempEntry.open = stockData.open * quantity;
+                                tempEntry.close = stockData.close * quantity;
+                                tempEntry.high = 0;
+                                tempEntry.low = 0;
+                                tempEntry.price = 0;
+                                tempEntry.cash = day.cMoney;
+                                tempEntry.activeStocks = quantity > 0 ? [stock.name] : [];
+
+                                tempData.push(tempEntry);
+                            }
+
+                        }
+                    }
+
+                    if (stock.recentHistory) {
+                        /*for (let day of stock.recentHistory) {
+                            let dayDate = new Date(day.date);
+
+                            let recentStockData, quantity = 0;
+                            const recentStockIndex = stock.recentHistory.findIndex((e) => {
+                                const eDate = new Date(e.date);
+    
+                                return (eDate.getTime() >= dayDate.getTime() && eDate.getTime() < new Date(day.date).setDate(dayDate.getDate() + 1));
+                            });
+    
+                            const recentDataIndex = tempRecentData.findIndex((e) => new Date(e.date).getTime() === dayDate.getTime());
+    
+                            if (recentStockIndex !== -1) {
+                                recentStockData = stock.recentHistory[recentStockIndex];
+
+                                for (let newDay of currentUser.history) {
+                                    if (new Date(newDay.date).getTime() < new Date(day.date).setDate(dayDate.getHours() + 1)) {
+                                        const transactionIndex = newDay.transactions.findIndex((e) => e.name === stock.name);
+
+                                        if (transactionIndex >= 0) {quantity = newDay.transactions[transactionIndex].newQuantity}
+                                    }
+                                }
+                            } else {
+                                for (let closestDay of stock.recentHistory) {
+                                    if (new Date(closestDay.date).getTime() < new Date(day.date).setDate(dayDate.getHours() + 1)) {
+                                        recentStockData = closestDay;
+                                    }
+                                }
+
+                                for (let newDay of currentUser.history) {
+                                    if (new Date(newDay.date).getTime() < new Date(day.date).setDate(dayDate.getHours() + 1)) {
+                                        const transactionIndex = newDay.transactions.findIndex((e) => e.name === stock.name);
+
+                                        if (transactionIndex >= 0) {quantity = newDay.transactions[transactionIndex].newQuantity}
+                                    }
+                                }
+                            }
+    
+                            if (recentDataIndex !== -1) {
+                                tempRecentData[recentDataIndex].price += recentStockData.price * quantity;
+                                if (quantity > 0) {
+                                    tempRecentData[recentDataIndex].activeStocks.push({name: stock.name, quantity: quantity, price: recentStockData.price});
+                                }
+                            } else {
+                                const tempEntry = {};
+    
+                                tempEntry.date = day.date;
+                                tempEntry.price = recentStockData.price * quantity;
+                                tempEntry.activeStocks = quantity > 0 ? [{name: stock.name, quantity: quantity, price: recentStockData.price}] : [];
+    
+                                tempRecentData.push(tempEntry);
+                            }
+                        }*/ 
+                    }
+                }
+
+                let startDate = new Date(today).setDate(today.getDate() - 5);
+                const endDate = new Date();
+
+                while (startDate < endDate) {
+                    if (currentUser && currentUser.history) {
+                        const ownedStocks = [];
+                        for (let day of currentUser.history) {
+                            if (new Date(day.date).getTime() < startDate) {
+                                for (let transaction of day.transactions) {
+                                    const ownedIndex = ownedStocks.findIndex((e) => e.name === transaction.name);
+
+                                    if (ownedIndex !== -1) {
+                                        ownedStocks[ownedIndex].quantity = transaction.newQuantity;
+                                    } else {
+                                        ownedStocks.push({name: transaction.name, quantity: transaction.newQuantity});
+                                    }
+                                }
+                            }
+                        }
+
+                        for (let stock of stockList) {
+                            for (let owned of ownedStocks) {
+                                if (owned.name === stock.name) {
+                                    if (stock.recentHistory) {
+                                        for (let day of stock.recentHistory) {
+                                            if (new Date(day.date).getTime() <= startDate) {
+                                                owned.price = Number(day.price);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        const tempEntry = {date: new Date(startDate), price: 0, activeStocks:[]};
+
+                        for (let owned of ownedStocks) {
+                            if (owned.price && typeof owned.price === 'number') {
+                                tempEntry.price += owned.price * owned.quantity;
+
+                                if (owned.quantity > 0) {
+                                    tempEntry.activeStocks.push({name: owned.name, quantity: owned.quantity, price: owned.price});
+                                }
+
+                            } else {
+                                const stockIndex = stockList.findIndex((e) => e.name === owned.name);
+
+                                if (stockIndex >= 0) {
+                                    if (stockList[stockIndex].history) {
+                                        for (let day of stockList[stockIndex].history) {
+                                            if (new Date(day.date).getTime() <= startDate) {
+                                                tempEntry.price += day.open;
+                                                if (owned.quantity > 0) {
+                                                    tempEntry.activeStocks.push({name: owned.name, quantity: owned.quantity, price: day.open});
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+                            
+                        }
+
+                        tempRecentData.push(tempEntry);
+
+                    }
+
+                    startDate += (60*60*1000);
+                }
+
+                
+    
+                tempData.forEach((i) => {
+                    if (i.date) {
+                        const tempDate = new Date(i.date);
+                        i.date = tempDate;
+                    }
+                });
 
                 tempRecentData.forEach((i) => {
                     if (i.date) {
                         const tempDate = new Date(i.date);
                         i.date = tempDate;
                     }
-                    i.price = Number(i.price);
-                });
+                })
             
-                if (JSON.stringify(recentData) !== JSON.stringify(tempRecentData)) {
+                if (JSON.stringify(tempData) !== JSON.stringify(data)) {
+                    setData(tempData);
+                }
+
+                if (JSON.stringify(tempRecentData) !== JSON.stringify(recentData)) {
                     setRecentData(tempRecentData);
                 }
             }
-
-            tempData.forEach((i) => {
-                if (i.date) {
-                    const tempDate = new Date(i.date);
-                    i.date = tempDate;
-                }
-                i.close = Number(i.close);
-            });
-        
-            if (JSON.stringify(tempData) !== JSON.stringify(data)) {
-                setData(tempData);
-            }
         }
 
-    }, [JSON.stringify(currentStock)]);
+    }, [JSON.stringify(currentStock), graphMode]);
 
     
     const margin = {top:0, right:0, bottom:0, left:0};
@@ -71,6 +294,7 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
                 if (dataSelect.Close) {dataArray.push(d.close)}
                 if (dataSelect.High) {dataArray.push(d.high)}
                 if (dataSelect.Low) {dataArray.push(d.low)}
+                if (dataSelect.Cash) {dataArray.push(d.cash)}
     
                 return Math.min(...dataArray);
             }
@@ -84,6 +308,7 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
                 if (dataSelect.Close) {dataArray.push(d.close)}
                 if (dataSelect.High) {dataArray.push(d.high)}
                 if (dataSelect.Low) {dataArray.push(d.low)}
+                if (dataSelect.Cash) {dataArray.push(d.cash)}
     
                 return Math.max(...dataArray);
             }
@@ -101,8 +326,9 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
                 if (dataSelect.Close) {dataArray.push(d.close)}
                 if (dataSelect.High) {dataArray.push(d.high)}
                 if (dataSelect.Low) {dataArray.push(d.low)}
+                if (dataSelect.Cash) {dataArray.push(d.cash)}
     
-                if (dataSelect.Open || dataSelect.Close || dataSelect.High || dataSelect.Low) {
+                if (dataSelect.Open || dataSelect.Close || dataSelect.High || dataSelect.Low || dataSelect.Cash) {
                     return Math.min(...dataArray);
                 } else {
                     return Infinity;
@@ -122,8 +348,9 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
                 if (dataSelect.Close) {dataArray.push(d.close)}
                 if (dataSelect.High) {dataArray.push(d.high)}
                 if (dataSelect.Low) {dataArray.push(d.low)}
+                if (dataSelect.Cash) {dataArray.push(d.cash)}
     
-                if (dataSelect.Open || dataSelect.Close || dataSelect.High || dataSelect.Low) {
+                if (dataSelect.Open || dataSelect.Close || dataSelect.High || dataSelect.Low || dataSelect.Cash) {
                     return Math.max(...dataArray);
                 } else {
                     return 0;
@@ -193,18 +420,18 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
                         //.defined(((d) => d.date > range[1]))
                         .curve(d3.curveMonotoneX)(data);
 
-    const highPath = d3
+    const highPath = graphMode === 'STOCKS' ? d3
                         .line()
                         .x((d) => getX(d.date))
                         .y((d) => getY(d.high))
                         //.defined(((d) => d.date > range[1]))
-                        .curve(d3.curveMonotoneX)(data);
-    const lowPath = d3
+                        .curve(d3.curveMonotoneX)(data) : '';
+    const lowPath = graphMode === 'STOCKS' ? d3
                         .line()
                         .x((d) => getX(d.date))
                         .y((d) => getY(d.low))
                         //.defined(((d) => d.date > range[1]))
-                        .curve(d3.curveMonotoneX)(data);
+                        .curve(d3.curveMonotoneX)(data) : '';
 
     const pricePath = d3
                         .line()
@@ -212,6 +439,13 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
                         .y((d) => getY(d.price))
                         //.defined(((d) => d.date > range[1]))
                         .curve(d3.curveMonotoneX)(recentData);
+
+    const cashPath = d3
+                        .line()
+                        .x((d) => getX(d.date))
+                        .y((d) => getY(d.cash))
+                        //.defined(((d) => d.date > range[1]))
+                        .curve(d3.curveMonotoneX)(data);
 
     const areaPath = d3
                         .area()
@@ -231,8 +465,8 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
     const handleMouseLeave = () => {
         setActiveIndex(null);
     }
-
     return (
+        <div className='graphSection'>
             <svg
                 className='graph'
                 viewBox={`0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`}
@@ -261,11 +495,11 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
                     <path strokeWidth={3} clipPath='url(#boundingBox)' fill='none' stroke={colors[1]} d={closePath} style={{ transition: "ease-out .25s" }} />
                     }
 
-                    {(range[0] !== '1d' && dataSelect.High) &&
+                    {(range[0] !== '1d' && dataSelect.High && graphMode === 'STOCKS') &&
                         <path strokeWidth={3} clipPath='url(#boundingBox)' fill='none' stroke={colors[2]} d={highPath} style={{ transition: "ease-out .25s" }} />
                     }
 
-                    {(range[0] !== '1d' && dataSelect.Low) &&
+                    {(range[0] !== '1d' && dataSelect.Low && graphMode === 'STOCKS') &&
                         <path strokeWidth={3} clipPath='url(#boundingBox)' fill='none' stroke={colors[3]} d={lowPath} style={{ transition: "ease-out .25s" }} />
                     }
 
@@ -273,20 +507,30 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
                         <path strokeWidth={3} clipPath='url(#boundingBox)' fill='none' stroke={colors[4]} d={pricePath} style={{ transition: "ease-out .25s" }} />
                     }
 
-                    <rect strokeWidth={0} fill={colors[0]} x={60} y={450} width={30} height={5} rx={2}  />
-                    <text x={100} y={458} fill='#fff' textAnchor='left' >Open</text>
+                    {(dataSelect.Cash) &&
+                        <path strokeWidth={3} clipPath='url(#boundingBox)' fill='none' stroke={colors[2]} d={cashPath} style={{ transition: "ease-out .25s" }} />
+                    }
 
-                    <rect strokeWidth={0} fill={colors[1]} x={260} y={450} width={30} height={5} rx={2}  />
-                    <text x={300} y={458} fill='#fff' textAnchor='left' >Close</text>
+                    <rect strokeWidth={0} fill={colors[4]} x={graphMode === 'STOCKS' ? 60 : 150} y={450} width={30} height={5} rx={2}  />
+                    <text x={graphMode === 'STOCKS' ? 100 : 190} y={458} fill='#fff' textAnchor='left' >{graphMode === 'STOCKS' ? 'Price' : 'Value'}</text>
 
-                    <rect strokeWidth={0} fill={colors[2]} x={460} y={450} width={30} height={5} rx={2}  />
-                    <text x={500} y={458} fill='#fff' textAnchor='left' >High</text>
+                    <rect strokeWidth={0} fill={colors[0]} x={graphMode === 'STOCKS' ? 260 : 350} y={450} width={30} height={5} rx={2}  />
+                    <text x={graphMode === 'STOCKS' ? 300 : 390} y={458} fill='#fff' textAnchor='left' >Open</text>
 
-                    <rect strokeWidth={0} fill={colors[3]} x={660} y={450} width={30} height={5} rx={2}  />
-                    <text x={700} y={458} fill='#fff' textAnchor='left' >Low</text>
+                    <rect strokeWidth={0} fill={colors[1]} x={graphMode === 'STOCKS' ? 460 : 550} y={450} width={30} height={5} rx={2}  />
+                    <text x={graphMode === 'STOCKS' ? 500 : 590} y={458} fill='#fff' textAnchor='left' >Close</text>
 
-                    <rect strokeWidth={0} fill={colors[4]} x={860} y={450} width={30} height={5} rx={2}  />
-                    <text x={900} y={458} fill='#fff' textAnchor='left' >Price</text>
+                    <rect strokeWidth={0} fill={colors[2]} x={graphMode === 'STOCKS' ? 660 : 750} y={450} width={30} height={5} rx={2}  />
+                    <text x={graphMode === 'STOCKS' ? 700 : 790} y={458} fill='#fff' textAnchor='left' >{graphMode === 'STOCKS' ? 'High' : 'Cash'}</text>
+
+                    {graphMode === 'STOCKS' &&
+                        <rect strokeWidth={0} fill={colors[3]} x={860} y={450} width={30} height={5} rx={2}  />
+                    }
+                    {graphMode === 'STOCKS' &&
+                        <text x={900} y={458} fill='#fff' textAnchor='left' >Low</text>
+                    }
+
+
 
                     {data.map((item, index) => {
                         return (
@@ -424,7 +668,7 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
                                     />
                                 }
 
-                                {dataSelect.High &&
+                                {(dataSelect.High) &&
                                     <circle
                                         cx={getX(item.date)}
                                         cy={getY(item.high)}
@@ -436,7 +680,7 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
                                     />
                                 }
 
-                                {dataSelect.Low &&
+                                {(dataSelect.Low) &&
                                     <circle
                                         cx={getX(item.date)}
                                         cy={getY(item.low)}
@@ -447,11 +691,24 @@ const LineChart = ({ currentStock, range, dataSelect }) => {
                                         style={{ transition: "ease-out .1s" }}
                                     />
                                 }
+
+                                {(dataSelect.Cash) &&
+                                    <circle
+                                        cx={getX(item.date)}
+                                        cy={getY(item.cash)}
+                                        r={index === activeIndex ? 6 : 0}
+                                        fill={colors[2]}
+                                        strokeWidth={index === activeIndex ? 2 : 0}
+                                        stroke='#fff'
+                                        style={{ transition: "ease-out .1s" }}
+                                    />
+                                }
                             </g>
                         )
                     })}
             </svg>
+        </div>
     );
 }
 
-export default LineChart;
+export default UserGraph;

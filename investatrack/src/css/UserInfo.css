@@ -109,28 +109,42 @@
     font-size:1.2rem;
 }
 
+.userInfoBioDescriptionText {
+    border-radius:20px;
+    border:2px solid mediumseagreen;
+    background:linear-gradient(to right, rgba(60, 179, 114, 0.101), transparent 90%);
+    padding:5px 3px;
+    width:25%;
+    display:flex;
+    flex-flow:column nowrap;
+    justify-content:flex-start;
+    align-items:center;
+    position:absolute;
+    bottom:10px;
+    left:10px;
+}
+
+.userInfoBioDescriptionText hr {
+    width:70%;
+    margin:0px 0px 5px 0px;
+    border:2px solid white;
+    border-radius:20px;
+}
+
 .userInfoBioDescriptionText span {
     font-family:'Fugaz One';
     text-decoration:underline;
     width:10%;
     text-align:left;
     margin:0;
+    font-size:1.2rem;
 }
 
 .userInfoBioDescriptionText h4 {
     margin:0;
     text-align:center;
     width:90%;
-}
-
-.userInfoBioDescriptionText {
-    border-radius:20px;
-    padding:10px 20px;
-    width:60%;
-    display:flex;
-    flex-flow:row nowrap;
-    justify-content:center;
-    align-items:center;
+    font-size:1.1rem;
 }
   
 .userInfo {
@@ -138,17 +152,20 @@
     flex-flow:column nowrap;
     justify-content:center;
     align-items:center;
-    margin:30px 0px 10px 0px;
+    margin:30px 0px 70px 0px;
 }
 
 .userInfoHeader {
-    width:75%;
+    width:70%;
     padding:25px;
     /*background: linear-gradient(to bottom, #142132, transparent);*/
     background-color:#14213266;
     border-radius:20px;
     border-top:3px solid white;
     border-bottom:3px solid white;
+    position:absolute;
+    top:300px;
+    right:30px;
 }
 
 .userInfoHeader h1 {
@@ -160,6 +177,7 @@
     width:auto;
     text-transform:uppercase;
     font-family: 'Fugaz One';
+    font-size:2.7rem;
     text-shadow:0px 0px 5px black;
     /*box-shadow: 0px 0px 5px mediumseagreen;*/
 

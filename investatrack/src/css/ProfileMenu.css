@@ -1,7 +1,5 @@
 .profileMenuWrapper {
-  position:absolute;
-  top:35px;
-  right:15px;
+  width:25%;
 }
 
 .profileMenu {
@@ -13,7 +11,9 @@
   background-size:200% 100%;
   background-position:left;
   padding:10px 10px 10px 30px;
-  position:relative;
+  position:fixed;
+  top:60px;
+  right:100px;
   border-radius:20px;
   border:2px solid mediumseagreen;
   z-index:2;
@@ -59,14 +59,15 @@
 }
 
 .profileMenuExpand {
-  position:absolute;
-  top:calc(100% - 5px);
-  right:5%;
+  position:fixed;
+  top: 135px;
+  right:115px;
   border:2px solid mediumseagreen;
   border-radius:0px 0px 0px 10px;
   background-color:#142132;
-  width:80%;
+  width:150px;
   z-index:1;
+  transition:all .2s ease-in-out;
 }
 
 .profileMenuExpand ul {

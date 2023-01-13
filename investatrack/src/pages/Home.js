@@ -22,7 +22,7 @@ const Home = () => {
     today.setHours(0,0,0,0);
 
     const [range, setRange] = useState(['1m', new Date().setDate(today.getDate() - 31)]);
-    const [dataSelect, setDataSelect] = useState({Open: true, Close: true, High: false, Low: false, Price: false});
+    const [dataSelect, setDataSelect] = useState({Open: true, Close: true, High: false, Low: false, Price: false, Cash: false});
 
     useEffect(() => {
         getUser();
@@ -105,7 +105,7 @@ const Home = () => {
                     <div className='graphTitleRow'>
                         <RangeSelector range={range} setRange={setRange} />
                         <h2>-{currentStock && currentStock.name ? currentStock.name : ''}-</h2>
-                        <DataSelector range={range} dataSelect={dataSelect} setDataSelect={setDataSelect} />
+                        <DataSelector graphMode='STOCKS' range={range} dataSelect={dataSelect} setDataSelect={setDataSelect} />
                     </div>
                     
                     <Graph currentStock={currentStock} range={range} dataSelect={dataSelect} />

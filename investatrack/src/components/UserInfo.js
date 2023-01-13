@@ -32,8 +32,7 @@ const UserInfo  = ({ currentUser, stockTotals, range }) => {
                     <span>{currentUser.profile ? (currentUser.profile.location.country ? currentUser.profile.location.country : '') : ''}</span>
                 </div>
                 <div className='userInfoBioDescriptionText'>
-                    {/*<span>About:</span>*/}
-                    {/*<h4>{currentUser.profile ? currentUser.profile.bio : ''}</h4>*/}
+                    <h4><span>Bio:</span> {currentUser.profile ? currentUser.profile.bio : ''}</h4>
                 </div>
             </div>
             <div className='userInfo'>
